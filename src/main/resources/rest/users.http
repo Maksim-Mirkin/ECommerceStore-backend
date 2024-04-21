@@ -1,0 +1,48 @@
+### login admin
+POST http://localhost:8080/api/v1/auth/login
+Content-Type: application/json
+
+{
+  "username": "admin",
+  "password": "Pass0rd1!"
+}
+
+### login customer
+POST http://localhost:8080/api/v1/auth/login
+Content-Type: application/json
+
+{
+  "username": "customer",
+  "password": "Pass0rd1!"
+}
+
+### admin details
+GET http://localhost:8080/api/v1/auth/me
+Authorization: bearer {{adminJWT}}
+
+### customer details
+GET http://localhost:8080/api/v1/auth/me
+Authorization: bearer {{customerJWT}}
+
+### register new user
+POST http://localhost:8080/api/v1/auth/register
+Content-Type: application/json
+
+{
+  "username": "new_user",
+  "email": "new_user@gmail.com",
+  "password": "Pass0rd1!"
+}
+
+### login new user
+POST http://localhost:8080/api/v1/auth/login
+Content-Type: application/json
+
+{
+  "username": "new_user",
+  "password": "Gfhjkmrf_1998"
+}
+
+### new_user details
+GET http://localhost:8080/api/v1/auth/me
+Authorization: bearer {{newUserJWT}}

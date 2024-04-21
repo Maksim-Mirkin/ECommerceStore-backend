@@ -1,0 +1,93 @@
+###Get All Orders
+GET http://localhost:8080/api/v1/orders/all?pageNumber=0&pageSize=10&sortDir=asc&sortBy=date
+Authorization: Bearer {{adminJWT}}
+
+###Get Order by Customer
+GET http://localhost:8080/api/v1/orders
+Authorization: Bearer {{customerJWT}}
+
+###Get Order by Customer
+GET http://localhost:8080/api/v1/orders?pageNumber=1
+Authorization: Bearer {{customerJWT}}
+
+###Create order
+POST http://localhost:8080/api/v1/orders
+Authorization: Bearer {{customerJWT}}
+Content-Type: application/json
+
+{
+  "orderItems": [
+    {
+      "productId": 1,
+      "quantity": 0
+    }
+  ],
+  "paymentInformation": "Cash",
+  "address": "Yitzhak Sadeh St 18",
+  "city": "Kiriat Tivon",
+  "phoneNumber": "0542293284",
+  "postalCode": "3655319"
+
+}
+
+###Create order
+POST http://localhost:8080/api/v1/orders
+Authorization: Bearer {{customerJWT}}
+Content-Type: application/json
+
+{
+  "orderItems": [
+    {
+      "product": {
+        "id": 1,
+        "name": "Product Name",
+        "price": 29.99,
+        "brand": "Brand Name",
+        "description": "Product description goes here.",
+        "image": "https://example.com/image.jpg",
+        "memory": "32GB",
+        "weight": 350,
+        "batteryCapacity": "3280mAh",
+        "os": "BrandOS",
+        "color": "Black",
+        "averageRating": 0.0,
+        "createdAt": "2024-03-01T09:50:16.73442",
+        "updatedAt": "2024-03-01T09:50:16.734456"
+      },
+      "quantity": 2
+    },
+    {
+      "product": {
+        "id": 2,
+        "name": "Product Name",
+        "price": 29.99,
+        "brand": "Brand Name",
+        "description": "Product description goes here.",
+        "image": "https://example.com/image.jpg",
+        "memory": "32GB",
+        "weight": 350,
+        "batteryCapacity": "3280mAh",
+        "os": "BrandOS",
+        "color": "Black",
+        "averageRating": 0.0,
+        "createdAt": "2024-03-01T09:50:16.73442",
+        "updatedAt": "2024-03-01T09:50:16.734456"
+      },
+      "quantity": 4
+    }
+  ],
+  "paymentInformation": "Cash",
+  "address": "Yitzhak Sadeh St 18",
+  "city": "Kiriat Tivon",
+  "phoneNumber": "0542293284",
+  "postalCode": "3655319"
+}
+
+###Update Order Status
+PUT http://localhost:8080/api/v1/orders/1
+Authorization: Bearer {{adminJWT}}
+Content-Type: application/json
+
+{
+  "status": "APPROVED"
+}

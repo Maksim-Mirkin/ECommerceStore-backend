@@ -1,0 +1,58 @@
+### POST new product
+POST http://localhost:8080/api/v1/products
+Content-Type: application/json
+Authorization: bearer {{adminJWT}}
+
+{
+  "name": "Product Name",
+  "price": 29.99,
+  "brand": "Brand Name",
+  "description": "Product description goes here.",
+  "image": "https://example.com/image.jpg",
+  "category": "cellular",
+  "memory": "32GB",
+  "weight": 350,
+  "batteryCapacity": "3280mAh",
+  "os": "BrandOS",
+  "color": "Black"
+}
+
+
+### GET all products
+GET http://localhost:8080/api/v1/products?pageNumber=1
+Authorization: bearer {{adminJWT}}
+
+### GET all products
+GET http://localhost:8080/api/v1/products?pageNumber=1&pageSize=20&sortDir=ASC&sortBy=asd
+Authorization: bearer {{adminJWT}}
+
+### GET product by id
+GET http://localhost:8080/api/v1/products/1
+Authorization: bearer {{adminJWT}}
+
+### UPDATE product by id
+PUT http://localhost:8080/api/v1/products/1
+Content-Type: application/json
+Authorization: bearer {{adminJWT}}
+
+{
+  "name": "Product Name X",
+  "price": 99.99,
+  "brand": "Brand Name X",
+  "description": "Updated description goes here.",
+  "image": "https://newexample.com/image.jpg",
+  "category": "cellular",
+  "memory": "64GB",
+  "weight": 500,
+  "batteryCapacity": "5000mAh",
+  "os": "NewOS",
+  "color": "Yellow"
+}
+
+### DELETE product by id
+DELETE http://localhost:8080/api/v1/products/8
+Authorization: bearer {{adminJWT}}
+
+### GET product by property
+GET http://localhost:8080/api/v1/products?sortBy=name
+Authorization: bearer {{adminJWT}}

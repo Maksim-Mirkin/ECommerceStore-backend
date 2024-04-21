@@ -1,0 +1,26 @@
+### POST new rating
+POST http://localhost:8080/api/v1/products/1/ratings
+Content-Type: application/json
+Authorization: bearer {{customerJWT}}
+
+{
+  "rating": 5
+}
+
+### POST new rating
+POST http://localhost:8080/api/v1/products/1/ratings
+Content-Type: application/json
+Authorization: bearer {{customerJWT}}
+
+{
+  "rating": 3
+}
+
+###Update rating
+PUT http://localhost:8080/api/v1/products/3/ratings
+Content-Type: application/json
+Authorization: bearer {{customerJWT}}
+
+{
+  "rating": 3
+}
