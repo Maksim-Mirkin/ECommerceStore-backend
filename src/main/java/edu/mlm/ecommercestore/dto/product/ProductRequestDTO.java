@@ -97,7 +97,7 @@ public class ProductRequestDTO {
      * The operating system of the product, if applicable.
      */
     @Schema(description = "The operating system of the product, if applicable.", example = "iOS")
-    private String os;
+    private String operatingSystem;
 
     /**
      * The color of the product.

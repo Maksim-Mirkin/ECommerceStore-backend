@@ -20,6 +20,9 @@ import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.util.UriComponentsBuilder;
 
+import java.math.BigDecimal;
+import java.util.List;
+
 /**
  * Controller for managing products within the application.
  * Provides endpoints for creating, retrieving, updating, and deleting products.
@@ -39,58 +42,97 @@ public class ProductController {
     private final ProductService productService;
 
     /**
-     * Retrieves a paginated list of all products.
-     * Supports pagination through query parameters.
+     * Retrieves a list of products based on specified criteria with pagination support.
+     * Supports filtering by name, brands, price range, colors, memory capacities, weights,
+     * battery capacities, operating systems, and category names.
      *
-     * @param pageNumber the page number to retrieve, starting from 0.
-     * @param pageSize the number of items per page.
-     * @param sortDir the direction of sorting (asc or desc).
-     * @param sortBy the property to sort the items by.
-     * @return a {@link ProductListDTO} containing a list of {@link ProductResponseDTO}.
+     * @param name              The name of the product (optional).
+     * @param brands            The list of brands to filter by (optional).
+     * @param minPrice          The minimum price of products to include (optional).
+     * @param maxPrice          The maximum price of products to include (optional).
+     * @param colors            The list of colors to filter by (optional).
+     * @param memories          The list of memory capacities to filter by (optional).
+     * @param weights           The list of weights to filter by (optional).
+     * @param batteryCapacities The list of battery capacities to filter by (optional).
+     * @param operatingSystems  The list of operating systems to filter by (optional).
+     * @param categoryNames     The list of category names to filter by (optional).
+     * @param pageNumber        The page number for pagination.
+     * @param pageSize          The page size for pagination.
+     * @param sortDir           The sort direction (ascending or descending).
+     * @param sortBy            The field(s) to sort by.
+     * @return A {@link ProductListDTO} containing the list of products matching the criteria.
      */
+    @Operation(summary = "Get products",
+            description = "Retrieves a list of products with pagination support. "
+                    + "Supports filtering by name, brands, price range, colors, memory capacities, weights, "
+                    + "battery capacities, operating systems, and category names.")
     @ApiResponses(value = {
-            @ApiResponse(responseCode = "200", description = "Successfully retrieved list of products"),
-            @ApiResponse(responseCode = "400",
-                    description = "Invalid page number/page size/sort direction/sort by property",
+            @ApiResponse(responseCode = "200", description = "Successfully retrieved list of products",
+                    content = @Content(
+                            mediaType = "application/json",
+                            schema = @Schema(implementation = ProductListDTO.class)
+                    )
+            ),
+            @ApiResponse(responseCode = "400", description = "Invalid page number/page size/sort direction/" +
+                    "sort by property/product property",
                     content = @Content(
                             mediaType = "application/json",
                             schema = @Schema(implementation = ExceptionDTO.class)
                     )
             ),
-            @ApiResponse(responseCode = "401",
-                    description = "You are not authorized to view the resource",
+            @ApiResponse(responseCode = "401", description = "You are not authorized to view the resource",
                     content = @Content(
                             mediaType = "application/json",
                             schema = @Schema(implementation = ExceptionDTO.class)
                     )
             ),
-            @ApiResponse(responseCode = "404",
-                    description = "The products you were trying to reach is not found",
+            @ApiResponse(responseCode = "404", description = "The products you were trying to reach are not found",
                     content = @Content(
                             mediaType = "application/json",
                             schema = @Schema(implementation = ExceptionDTO.class)
                     )
             ),
-            @ApiResponse(responseCode = "500",
-                    description = "Internal server error",
-                    content = @Content(
-                            mediaType = "application/json",
-                            schema = @Schema(implementation = InternalServerExceptionDTO.class)
-                    )
+            @ApiResponse(responseCode = "500", description = "Internal server error",
+                    content = @Content
+                            (mediaType = "application/json",
+                                    schema = @Schema(implementation = InternalServerExceptionDTO.class)
+                            )
             )
     })
-    @Operation(summary = "Get all products",
-            description = "Retrieves a list of all products with pagination support.")
     @GetMapping
-    public ResponseEntity<ProductListDTO> getAllProducts(
+    public ResponseEntity<ProductListDTO> findProducts(
+            @RequestParam(value = "name", required = false) String name,
+            @RequestParam(value = "brands", required = false) List<String> brands,
+            @RequestParam(value = "minPrice", required = false) BigDecimal minPrice,
+            @RequestParam(value = "maxPrice", required = false) BigDecimal maxPrice,
+            @RequestParam(value = "colors", required = false) List<String> colors,
+            @RequestParam(value = "memories", required = false) List<String> memories,
+            @RequestParam(value = "weights", required = false) List<BigDecimal> weights,
+            @RequestParam(value = "batteryCapacities", required = false) List<String> batteryCapacities,
+            @RequestParam(value = "operatingSystems", required = false) List<String> operatingSystems,
+            @RequestParam(value = "categoryNames", required = false) List<String> categoryNames,
             @RequestParam(value = "pageNumber", required = false, defaultValue = "0") int pageNumber,
             @RequestParam(value = "pageSize", required = false, defaultValue = "12") int pageSize,
             @RequestParam(value = "sortDir", required = false, defaultValue = "asc") String sortDir,
-            @RequestParam(value = "sortBy", required = false, defaultValue = "id") String sortBy
+            @RequestParam(value = "sortBy", required = false, defaultValue = "id") String... sortBy
     ) {
-        return ResponseEntity.ok(productService.getAllProducts(pageNumber, pageSize, sortDir, sortBy));
+        return ResponseEntity.ok(productService.findProducts(
+                name,
+                brands,
+                minPrice,
+                maxPrice,
+                colors,
+                memories,
+                weights,
+                batteryCapacities,
+                operatingSystems,
+                categoryNames,
+                pageNumber,
+                pageSize,
+                sortDir,
+                sortBy
+        ));
     }
-
 
     /**
      * Retrieves detailed information about a product identified by its unique ID.
@@ -133,8 +175,8 @@ public class ProductController {
     /**
      * Creates a new product in the system. Requires admin privileges.
      *
-     * @param productDto the product data transfer object containing product details.
-     * @param uriBuilder a {@link UriComponentsBuilder} for building the location URI.
+     * @param productDto     the product data transfer object containing product details.
+     * @param uriBuilder     a {@link UriComponentsBuilder} for building the location URI.
      * @param authentication the {@link Authentication} object representing the current user's authentication.
      * @return a {@link ProductResponseDTO} with the created product's details.
      */
@@ -187,8 +229,8 @@ public class ProductController {
     /**
      * Updates an existing product identified by its ID. Requires admin privileges.
      *
-     * @param id the unique identifier of the product to update.
-     * @param dto the product data transfer object containing updated product details.
+     * @param id             the unique identifier of the product to update.
+     * @param dto            the product data transfer object containing updated product details.
      * @param authentication the {@link Authentication} object representing the current user's authentication.
      * @return a {@link ProductResponseDTO} with the updated product's details.
      */
@@ -246,7 +288,7 @@ public class ProductController {
     /**
      * Deletes a product from the system by its ID. Requires admin privileges.
      *
-     * @param id the unique identifier of the product to delete.
+     * @param id             the unique identifier of the product to delete.
      * @param authentication the {@link Authentication} object representing the current user's authentication.
      * @return a {@link ProductResponseDTO} indicating the outcome of the delete operation.
      */

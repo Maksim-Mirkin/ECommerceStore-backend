@@ -1,6 +1,7 @@
 package edu.mlm.ecommercestore.dto.product;
 
 import io.swagger.v3.oas.annotations.media.Schema;
+import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -65,6 +66,13 @@ public class ProductResponseDTO {
     private String image;
 
     /**
+     * The category the product belongs to.
+     */
+    @NotNull
+    @Schema(description = "The category the product belongs to.", example = "Cellular/TV/Headphone/Laptop")
+    private String category;
+
+    /**
      * The memory specification of the product, if applicable.
      */
     @Schema(description = "The memory specification of the product, if applicable.", example = "8GB")
@@ -86,7 +94,7 @@ public class ProductResponseDTO {
      * The operating system of the product, if applicable.
      */
     @Schema(description = "The operating system of the product, if applicable.", example = "Android 11")
-    private String os;
+    private String operatingSystem;
 
     /**
      * The color of the product.

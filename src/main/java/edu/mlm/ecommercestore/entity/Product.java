@@ -18,7 +18,15 @@ import java.util.List;
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
-@Table(name = "products")
+@Table(name = "products", indexes = {
+        @Index(name = "idx_product_brand", columnList = "brand"),
+        @Index(name = "idx_product_price", columnList = "price"),
+        @Index(name = "idx_product_color", columnList = "color"),
+        @Index(name = "idx_product_memory", columnList = "memory"),
+        @Index(name = "idx_product_weight", columnList = "weight"),
+        @Index(name = "idx_product_battery_capacity", columnList = "batteryCapacity"),
+        @Index(name = "idx_product_operatingSystem", columnList = "operatingSystem")
+})
 @Schema(description = "Represents a product in the e-commerce store")
 public class Product {
 
@@ -62,7 +70,7 @@ public class Product {
     private String batteryCapacity;
 
     @Schema(description = "The operating system of the product", example = "iOS")
-    private String os;
+    private String operatingSystem;
 
     @NotNull
     @Schema(description = "The color of the product", example = "Black")
@@ -98,9 +106,14 @@ public class Product {
 
         int totalRatings = ratings.size();
         int sumOfRatings = 0;
-        for(Rating rating: ratings){
+        for (Rating rating : ratings) {
             sumOfRatings += rating.getRating();
         }
         averageRating = (double) sumOfRatings / totalRatings;
+    }
+
+    public double getAverageRating(Product product) {
+        product.calculateAverageRating();
+        return product.getAverageRating();
     }
 }

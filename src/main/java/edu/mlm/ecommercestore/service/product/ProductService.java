@@ -4,15 +4,34 @@ import edu.mlm.ecommercestore.dto.product.ProductListDTO;
 import edu.mlm.ecommercestore.dto.product.ProductRequestDTO;
 import edu.mlm.ecommercestore.dto.product.ProductResponseDTO;
 import edu.mlm.ecommercestore.entity.Product;
+import edu.mlm.ecommercestore.error.AuthenticationException;
+import edu.mlm.ecommercestore.error.InvalidPropertyException;
+import edu.mlm.ecommercestore.error.PaginationException;
+import edu.mlm.ecommercestore.repository.CategoryRepository;
+import edu.mlm.ecommercestore.repository.ProductRepository;
+import edu.mlm.ecommercestore.repository.UserRepository;
+import org.modelmapper.ModelMapper;
 import org.springframework.security.core.Authentication;
 
+import java.math.BigDecimal;
+import java.util.List;
+
 /**
- * Service interface for managing product operations in the e-commerce platform.
+ * Service implementation for managing product operations.
  * <p>
- * Defines the contract for services handling the creation, retrieval, update, and deletion of products.
- * This interface abstracts the core product management functionalities, ensuring that the system can
- * manage products efficiently while maintaining a clear separation of concerns between the service
- * layer and the persistence layer.
+ * This class implements the {@link ProductService} interface, providing concrete methods for
+ * creating, retrieving, updating, and deleting products. It utilizes {@link ProductRepository},
+ * {@link UserRepository}, and {@link CategoryRepository} for persistence operations, and
+ * {@link ModelMapper} for object mapping between entities and DTOs.
+ * <p>
+ * The supported operations include:
+ * <ul>
+ *     <li>Creating a new product</li>
+ *     <li>Retrieving products (with pagination and optional filtering by category)</li>
+ *     <li>Retrieving a product by its ID</li>
+ *     <li>Updating an existing product</li>
+ *     <li>Deleting a product</li>
+ * </ul>
  */
 public interface ProductService {
 
@@ -23,24 +42,53 @@ public interface ProductService {
      * is validated and persisted. It may also perform authorization checks to ensure that the caller
      * has the necessary permissions to create products.
      *
-     * @param productDto The product data transfer object containing the product details.
+     * @param productDto     The product data transfer object containing the product details.
      * @param authentication The authentication context of the user performing the operation.
      * @return A {@link ProductResponseDTO} containing the details of the newly created product.
      */
     ProductResponseDTO createProduct(ProductRequestDTO productDto, Authentication authentication);
 
+
     /**
-     * Retrieves a paginated list of all products.
+     * Retrieves products based on specified criteria.
      * <p>
-     * Supports pagination and sorting to efficiently manage and display a large number of products.
+     * This method retrieves a list of products based on the provided criteria, such as name, brands,
+     * price range, colors, etc. It supports pagination to limit the number of results returned.
      *
-     * @param pageNumber The page number of the requested page.
-     * @param pageSize The number of products per page.
-     * @param sortDir The direction of the sort (e.g., "asc" or "desc").
-     * @param sortBy The properties to sort the products by.
-     * @return A {@link ProductListDTO} containing the paginated list of products.
+     * @param name              The name of the product (optional).
+     * @param brands            The list of brands to filter by (optional).
+     * @param minPrice          The minimum price of products to include (optional).
+     * @param maxPrice          The maximum price of products to include (optional).
+     * @param colors            The list of colors to filter by (optional).
+     * @param memories          The list of memory capacities to filter by (optional).
+     * @param weights           The list of weights to filter by (optional).
+     * @param batteryCapacities The list of battery capacities to filter by (optional).
+     * @param operatingSystems  The list of operating systems to filter by (optional).
+     * @param categoryNames     The list of category names to filter by (optional).
+     * @param pageNumber        The page number for pagination.
+     * @param pageSize          The page size for pagination.
+     * @param sortDir           The sort direction (ascending or descending).
+     * @param sortBy            The field(s) to sort by.
+     * @return A {@link ProductListDTO} containing the list of products matching the criteria.
+     * @throws PaginationException      if pagination parameters are invalid or if the specified page number exceeds the total pages.
+     * @throws InvalidPropertyException if a property referenced in sorting or filtering criteria is invalid.
      */
-    ProductListDTO getAllProducts(int pageNumber, int pageSize, String sortDir, String... sortBy);
+    ProductListDTO findProducts(
+            String name,
+            List<String> brands,
+            BigDecimal minPrice,
+            BigDecimal maxPrice,
+            List<String> colors,
+            List<String> memories,
+            List<BigDecimal> weights,
+            List<String> batteryCapacities,
+            List<String> operatingSystems,
+            List<String> categoryNames,
+            int pageNumber,
+            int pageSize,
+            String sortDir,
+            String... sortBy
+    );
 
     /**
      * Retrieves the details of a product by its ID.
@@ -70,10 +118,11 @@ public interface ProductService {
      * identified by the given ID. Authorization checks should ensure that the caller has the
      * necessary permissions to update the product.
      *
-     * @param id The ID of the product to update.
-     * @param dto The product data transfer object containing the updated product details.
+     * @param id             The ID of the product to update.
+     * @param dto            The product data transfer object containing the updated product details.
      * @param authentication The authentication context of the user performing the operation.
      * @return A {@link ProductResponseDTO} containing the updated details of the product.
+     * @throws AuthenticationException if the user does not have the necessary permissions.
      */
     ProductResponseDTO updateProduct(long id, ProductRequestDTO dto, Authentication authentication);
 
@@ -83,7 +132,7 @@ public interface ProductService {
      * This method removes the product identified by the given ID from the database. It may perform
      * authorization checks to ensure that the caller has the necessary permissions to delete the product.
      *
-     * @param id The ID of the product to delete.
+     * @param id             The ID of the product to delete.
      * @param authentication The authentication context of the user performing the operation.
      * @return A {@link ProductResponseDTO} containing the details of the deleted product.
      */

@@ -11,17 +11,21 @@ import edu.mlm.ecommercestore.error.ResourceNotFoundException;
 import edu.mlm.ecommercestore.repository.CategoryRepository;
 import edu.mlm.ecommercestore.repository.ProductRepository;
 import edu.mlm.ecommercestore.repository.UserRepository;
+import edu.mlm.ecommercestore.service.filter.ProductSpecification;
+import jakarta.persistence.EntityManager;
+import jakarta.persistence.PersistenceContext;
 import lombok.RequiredArgsConstructor;
 import lombok.val;
 import org.modelmapper.ModelMapper;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.data.mapping.PropertyReferenceException;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Service;
 
+import java.math.BigDecimal;
 import java.util.List;
 
 /**
@@ -40,6 +44,8 @@ public class ProductServiceImpl implements ProductService {
     private final ModelMapper modelMapper;
     private final UserRepository userRepository;
     private final CategoryRepository categoryRepository;
+    @PersistenceContext
+    private EntityManager entityManager;
 
     /**
      * {@inheritDoc}
@@ -51,46 +57,52 @@ public class ProductServiceImpl implements ProductService {
         product.setCategory(category);
         val saved = productRepository.save(product);
 
-        return modelMapper.map(saved, ProductResponseDTO.class);
+        return getProductResponseDTO(saved);
     }
 
     /**
      * {@inheritDoc}
      */
     @Override
-    public ProductListDTO getAllProducts(
+    public ProductListDTO findProducts(
+            String name,
+            List<String> brands,
+            BigDecimal minPrice,
+            BigDecimal maxPrice,
+            List<String> colors,
+            List<String> memories,
+            List<BigDecimal> weights,
+            List<String> batteryCapacities,
+            List<String> operatingSystems,
+            List<String> categoryNames,
             int pageNumber,
             int pageSize,
             String sortDir,
             String... sortBy
     ) {
         try {
-            Sort.Direction sort = Sort.Direction.fromString(sortDir);
+            val spec = Specification.where(ProductSpecification.hasName(name))
+                    .and(ProductSpecification.hasBrands(brands))
+                    .and(ProductSpecification.hasPriceBetween(minPrice, maxPrice, entityManager))
+                    .and(ProductSpecification.hasColors(colors))
+                    .and(ProductSpecification.hasMemories(memories))
+                    .and(ProductSpecification.hasWeights(weights))
+                    .and(ProductSpecification.hasBatteryCapacities(batteryCapacities))
+                    .and(ProductSpecification.hasOperatingSystems(operatingSystems))
+                    .and(ProductSpecification.byCategories(categoryNames));
 
-            Pageable pageable = PageRequest.of(pageNumber, pageSize, sort, sortBy);
+            val sort = Sort.Direction.fromString(sortDir);
 
-            Page<Product> pr = productRepository.findAll(pageable);
+            val pageable = PageRequest.of(pageNumber, pageSize, sort, sortBy);
+
+            Page<Product> pr = productRepository.findAll(spec, pageable);
 
             if (pageNumber >= pr.getTotalPages()) {
                 throw new PaginationException("Page number " + pageNumber + " exceeds total pages " + pr.getTotalPages());
             }
 
-            List<ProductResponseDTO> productListDTO =
-                    pr.getContent().stream()
-                            .map(p -> {
-                                p.calculateAverageRating();
-                                return modelMapper.map(p, ProductResponseDTO.class);
-                            })
-                            .toList();
-            return new ProductListDTO(
-                    pr.getTotalElements(),
-                    pr.getNumber(),
-                    pr.getSize(),
-                    pr.getTotalPages(),
-                    pr.isFirst(),
-                    pr.isLast(),
-                    productListDTO
-            );
+
+            return mapProductPageToDTO(pr);
         } catch (IllegalArgumentException e) {
             throw new PaginationException(e.getMessage());
         } catch (PropertyReferenceException e) {
@@ -98,14 +110,14 @@ public class ProductServiceImpl implements ProductService {
         }
     }
 
+
     /**
      * {@inheritDoc}
      */
     @Override
     public ProductResponseDTO getProductById(long id) {
         Product product = getProductEntityOrThrow(id);
-        product.calculateAverageRating();
-        return modelMapper.map(product, ProductResponseDTO.class);
+        return getProductResponseDTO(product);
     }
 
     /**
@@ -132,7 +144,7 @@ public class ProductServiceImpl implements ProductService {
 
         val saved = productRepository.save(productBeforeSave);
         saved.calculateAverageRating();
-        return modelMapper.map(saved, ProductResponseDTO.class);
+        return getProductResponseDTO(saved);
     }
 
     /**
@@ -143,8 +155,46 @@ public class ProductServiceImpl implements ProductService {
         val product = getProductEntityOrThrow(id);
         checkPermission(authentication);
         productRepository.delete(product);
+        return getProductResponseDTO(product);
+    }
+
+
+    /**
+     * Converts a {@link Product} object to a {@link ProductResponseDTO}.
+     *
+     * @param product the product to convert
+     * @return a ProductResponseDTO that represents the given product
+     */
+    private ProductResponseDTO getProductResponseDTO(Product product) {
         product.calculateAverageRating();
-        return modelMapper.map(product, ProductResponseDTO.class);
+        val productResponseDTO = modelMapper.map(product, ProductResponseDTO.class);
+        productResponseDTO.setCategory(product.getCategory().getName());
+        return productResponseDTO;
+    }
+
+    /**
+     * Maps a {@link Page} of {@link Product} objects to a {@link ProductListDTO}.
+     * <p>
+     * The method transforms a page of products into a DTO object containing product details and pagination information.
+     * For each product, the average rating is calculated, and the product is mapped to a {@link ProductResponseDTO}.
+     *
+     * @param pr The page of products to be mapped.
+     * @return A {@link ProductListDTO} containing product details and pagination information.
+     */
+    private ProductListDTO mapProductPageToDTO(Page<Product> pr) {
+        val productListDTO =
+                pr.getContent().stream()
+                        .map(this::getProductResponseDTO)
+                        .toList();
+        return new ProductListDTO(
+                pr.getTotalElements(),
+                pr.getNumber(),
+                pr.getSize(),
+                pr.getTotalPages(),
+                pr.isFirst(),
+                pr.isLast(),
+                productListDTO
+        );
     }
 
     /**

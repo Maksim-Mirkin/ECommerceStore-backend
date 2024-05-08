@@ -32,8 +32,6 @@ public class OrderRequestDTO {
      * List of items requested in the order. Each item includes product details and the quantity ordered.
      */
     @NotNull
-//    @OrderItemQuantity
-//    @OrderItemProduct
     @Schema(description = "List of items requested in the order, including product details and quantity.")
     private List<@Valid OrderItemRequestDTO> orderItems;
 

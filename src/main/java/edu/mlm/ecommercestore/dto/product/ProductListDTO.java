@@ -1,5 +1,6 @@
 package edu.mlm.ecommercestore.dto.product;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -49,12 +50,14 @@ public class ProductListDTO {
      * Indicates whether the current page is the first one.
      */
     @Schema(description = "Indicates whether the current page is the first one.", example = "true")
+    @JsonProperty("isFirst")
     private boolean isFirst;
 
     /**
      * Indicates whether the current page is the last one.
      */
     @Schema(description = "Indicates whether the current page is the last one.", example = "false")
+    @JsonProperty("isLast")
     private boolean isLast;
 
     /**

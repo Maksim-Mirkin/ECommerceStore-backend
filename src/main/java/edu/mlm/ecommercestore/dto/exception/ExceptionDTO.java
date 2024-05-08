@@ -31,7 +31,7 @@ public class ExceptionDTO {
      * The controller method where the exception occurred.
      */
     @Schema(description = "The controller method where the exception occurred.",
-            example = "getProductById")
+            example = "getProducts")
     private String controllerMethod;
 
     /**
@@ -44,21 +44,21 @@ public class ExceptionDTO {
      * The path of the request that caused the exception.
      */
     @Schema(description = "The path of the request that caused the exception.",
-            example = "/api/v1/products/{id}")
+            example = "/api/v1/products/")
     private String path;
 
     /**
      * A message detailing the exception.
      */
     @Schema(description = "A message detailing the exception.",
-            example = "Entity Product with id = 123 not found!")
+            example = "There is something wrong with the request.")
     private String message;
 
     /**
      * The HTTP status code of the response.
      */
     @Schema(description = "The HTTP status code of the response.",
-            example = "404")
+            example = "400/401/403/404")
     private int status;
 
     /**

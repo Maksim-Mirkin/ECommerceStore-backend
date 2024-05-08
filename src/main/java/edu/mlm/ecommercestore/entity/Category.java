@@ -23,6 +23,7 @@ import lombok.*;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
+@ToString
 @Table(name = "categories")
 @Schema(description = "Represents a category of products in the e-commerce store")
 public class Category {

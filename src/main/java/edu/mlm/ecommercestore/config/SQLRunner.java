@@ -76,10 +76,10 @@ public class SQLRunner implements CommandLineRunner {
 
         // Categories initialization
         if (categoryRepository.count() == 0) {
-            categoryRepository.save(new Category(1L, "Laptops"));
+            categoryRepository.save(new Category(1L, "Laptop"));
             categoryRepository.save(new Category(2L, "Cellular"));
             categoryRepository.save(new Category(3L, "TV"));
-            categoryRepository.save(new Category(4L, "Headphones"));
+            categoryRepository.save(new Category(4L, "Headphone"));
         }
     }
 }

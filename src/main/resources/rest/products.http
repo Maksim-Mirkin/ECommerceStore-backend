@@ -1,33 +1,86 @@
-### POST new product
+### POST new product(cellular)
 POST http://localhost:8080/api/v1/products
 Content-Type: application/json
 Authorization: bearer {{adminJWT}}
 
 {
-  "name": "Product Name",
-  "price": 29.99,
-  "brand": "Brand Name",
-  "description": "Product description goes here.",
-  "image": "https://example.com/image.jpg",
+  "name": "iPhone 15",
+  "price": 799,
+  "brand": "Apple",
+  "description": "Its innovative design includes a durable colour-infused glass and aluminium build, which is splash, water, and dust resistant. The Ceramic Shield front adds robustness, and the 6.1\" Super Retina XDR display ensures a vibrant and clear viewing experience, even in bright sunlight.",
+  "image": "https://nextech.co.il/wp-content/uploads/2023/09/natural-iphone-15-pro-sku-header-120923.png",
   "category": "cellular",
-  "memory": "32GB",
-  "weight": 350,
-  "batteryCapacity": "3280mAh",
-  "os": "BrandOS",
+  "memory": "256GB",
+  "weight": 171,
+  "batteryCapacity": "3349mAh",
+  "operatingSystem": "iOS",
+  "color": "Platinum"
+}
+
+### POST new product(laptop)
+POST http://localhost:8080/api/v1/products
+Content-Type: application/json
+Authorization: bearer {{adminJWT}}
+
+{
+  "name": "13-inch MacBook Air",
+  "price": 999,
+  "brand": "Apple",
+  "description": "When measured as a standard rectangular shape, the screens are 13.6 inches and 15.3 inches diagonally (actual viewable area is less). Testing conducted by Apple in May 2022 using preproduction 13-inch MacBook Air systems with Apple M2, 8-core CPU, 8-core GPU, 8GB of RAM, and 256GB SSD.",
+  "image": "https://epalle.co.il/wp-content/uploads/2022/06/macbook-air-m2-midnight-front.webp",
+  "category": "laptop",
+  "memory": "256GB",
+  "weight": 1250,
+  "batteryCapacity": "52.6Wh",
+  "operatingSystem": "macOS",
+  "color": "Midnight blue"
+}
+
+### POST new product(headphone)
+POST http://localhost:8080/api/v1/products
+Content-Type: application/json
+Authorization: bearer {{adminJWT}}
+
+{
+  "name": "AirPods Max",
+  "price": 549,
+  "brand": "Apple",
+  "description": "AirPods Max combine high-fidelity audio with industry-leading Active Noise Cancellation to deliver an unparalleled listening experience. Each part of their custom-built driver works to produce sound with ultra-low distortion across the audible range.",
+  "image": "https://www.apple.com/v/airpods-max/f/images/overview/hero__gnfk5g59t0qe_xlarge.png",
+  "category": "headphone",
+  "weight": 384.8,
+  "batteryCapacity": "664mAh",
+  "color": "Silver"
+}
+
+### POST new product(tv)
+POST http://localhost:8080/api/v1/products
+Content-Type: application/json
+Authorization: bearer {{adminJWT}}
+
+{
+  "name": "Samsung S90C OLED",
+  "price": 799,
+  "brand": "Samsung",
+  "description": "Smart TV features are paired with brilliant self-lit pixels in the S90C 65\" 4K HDR OLED TV from Samsung. The OLED panel offers bright whites, deep blacks, and vivid colors in stunning 4K resolution. Even if your content is not in 4K, Samsung's Neural Quantum processor can utilize AI-based 4K upscaling to improve its appearance.",
+  "image": "https://images.samsung.com/is/image/samsung/p6pim/ca/qn65s90cafxzc/gallery/ca-oled-tv-qn65s90cafxzc-front-black-titanium-535999692?$624_624_PNG$",
+  "category": "tv",
+  "weight": 35200,
+  "operatingSystem": "Tizen OS",
   "color": "Black"
 }
 
 
 ### GET all products
-GET http://localhost:8080/api/v1/products?pageNumber=1
+GET http://localhost:8080/api/v1/products
 Authorization: bearer {{adminJWT}}
 
 ### GET all products
-GET http://localhost:8080/api/v1/products?pageNumber=1&pageSize=20&sortDir=ASC&sortBy=asd
+GET http://localhost:8080/api/v1/products?pageNumber=1&pageSize=1&sortDir=ASC&sortBy=asd
 Authorization: bearer {{adminJWT}}
 
 ### GET product by id
-GET http://localhost:8080/api/v1/products/1
+GET http://localhost:8080/api/v1/products/asd
 Authorization: bearer {{adminJWT}}
 
 ### UPDATE product by id
@@ -36,23 +89,27 @@ Content-Type: application/json
 Authorization: bearer {{adminJWT}}
 
 {
-  "name": "Product Name X",
-  "price": 99.99,
-  "brand": "Brand Name X",
-  "description": "Updated description goes here.",
-  "image": "https://newexample.com/image.jpg",
+  "name": "iPhone 15",
+  "price": 899,
+  "brand": "Apple",
+  "description": "Its innovative design includes a durable colour-infused glass and aluminium build, which is splash, water, and dust resistant. The Ceramic Shield front adds robustness, and the 6.1\" Super Retina XDR display ensures a vibrant and clear viewing experience, even in bright sunlight.",
+  "image": "https://nextech.co.il/wp-content/uploads/2023/09/natural-iphone-15-pro-sku-header-120923.png",
   "category": "cellular",
-  "memory": "64GB",
-  "weight": 500,
-  "batteryCapacity": "5000mAh",
-  "os": "NewOS",
-  "color": "Yellow"
+  "memory": "512GB",
+  "weight": 171,
+  "batteryCapacity": "3349mAh",
+  "os": "iOS",
+  "color": "Platinum"
 }
 
 ### DELETE product by id
-DELETE http://localhost:8080/api/v1/products/8
+DELETE http://localhost:8080/api/v1/products/10
 Authorization: bearer {{adminJWT}}
 
 ### GET product by property
 GET http://localhost:8080/api/v1/products?sortBy=name
+Authorization: bearer {{adminJWT}}
+
+### GET find product by property
+GET http://localhost:8080/api/v1/products?name=ma
 Authorization: bearer {{adminJWT}}

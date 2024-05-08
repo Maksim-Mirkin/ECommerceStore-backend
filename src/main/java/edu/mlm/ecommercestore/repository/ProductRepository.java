@@ -3,6 +3,7 @@ package edu.mlm.ecommercestore.repository;
 import edu.mlm.ecommercestore.entity.Product;
 import jakarta.annotation.Nullable;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
 
 
 /**
@@ -17,7 +18,7 @@ import org.springframework.data.jpa.repository.JpaRepository;
  * @see JpaRepository
  * @see Product
  */
-public interface ProductRepository extends JpaRepository<Product, Long> {
+public interface ProductRepository extends JpaRepository<Product, Long>, JpaSpecificationExecutor<Product> {
     /**
      * Checks whether a {@link Product} with the specified ID exists in the database.
      *

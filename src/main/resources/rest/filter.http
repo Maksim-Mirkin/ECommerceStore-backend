@@ -1,0 +1,5 @@
+### GET filter options
+### params: brands, minPrice, maxPrice, colors, memories, weights,
+### batteryCapacities, operatingSystem, categories
+GET http://localhost:8080/api/v1/filter?weights=asd
+Authorization: bearer {{adminJWT}}
