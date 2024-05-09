@@ -1,8 +1,16 @@
 package edu.mlm.ecommercestore.controller;
 
+import edu.mlm.ecommercestore.dto.exception.ExceptionDTO;
+import edu.mlm.ecommercestore.dto.exception.InternalServerExceptionDTO;
 import edu.mlm.ecommercestore.dto.filter.ProductFilterOptionsDTO;
 import edu.mlm.ecommercestore.service.filter.FilterService;
 import edu.mlm.ecommercestore.validator.AllowedParameters;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.media.Content;
+import io.swagger.v3.oas.annotations.media.Schema;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.responses.ApiResponses;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -19,6 +27,7 @@ import java.util.List;
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/api/v1/filter")
+@Tag(name = "Filter", description = "APIs for filtering different entities based on criteria")
 public class FilterController {
 
     private final FilterService filterService;
@@ -38,6 +47,34 @@ public class FilterController {
      * @param categories        list of categories to filter by.
      * @return a {@link ProductFilterOptionsDTO} with the distinct filter options available based on the criteria.
      */
+    @Operation(summary = "Retrieve product filter options",
+            description = "Provides filtering options for products based on attributes like name, price, categories etc.")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Successfully retrieved filter options",
+                    content = @Content(
+                            mediaType = "application/json",
+                            schema = @Schema(implementation = ProductFilterOptionsDTO.class)
+                    )
+            ),
+            @ApiResponse(responseCode = "400", description = "Invalid request parameters",
+                    content = @Content(
+                            mediaType = "application/json",
+                            schema = @Schema(implementation = ExceptionDTO.class)
+                    )
+            ),
+            @ApiResponse(responseCode = "401", description = "You are not authorized to view the resource",
+                    content = @Content(
+                            mediaType = "application/json",
+                            schema = @Schema(implementation = ExceptionDTO.class)
+                    )
+            ),
+            @ApiResponse(responseCode = "500", description = "Internal server error",
+                    content = @Content
+                            (mediaType = "application/json",
+                                    schema = @Schema(implementation = InternalServerExceptionDTO.class)
+                            )
+            )
+    })
     @AllowedParameters({"name", "brand", "minPrice", "maxPrice", "color", "memory", "weight", "batteryCapacity", "operatingSystem", "category"})
     @GetMapping
     public ResponseEntity<ProductFilterOptionsDTO> getFilterOptions(
