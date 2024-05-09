@@ -23,8 +23,12 @@ public class ProductSpecification {
      * @return a specification that matches products whose names contain the given substring, case-insensitively.
      */
     public static Specification<Product> hasName(String name) {
-        return (root, query, criteriaBuilder) ->
-                criteriaBuilder.like(criteriaBuilder.lower(root.get("name")), "%" + name.toLowerCase() + "%");
+        return (root, query, criteriaBuilder) -> {
+            if (name == null) {
+                return criteriaBuilder.isTrue(criteriaBuilder.literal(true));
+            }
+            return criteriaBuilder.like(criteriaBuilder.lower(root.get("name")), "%" + name.toLowerCase() + "%");
+        };
     }
 
     /**
