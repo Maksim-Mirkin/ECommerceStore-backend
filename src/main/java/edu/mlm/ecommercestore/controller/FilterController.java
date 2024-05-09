@@ -76,7 +76,7 @@ public class FilterController {
             )
     })
     @AllowedParameters({"name", "brand", "minPrice", "maxPrice", "color", "memory", "weight", "batteryCapacity", "operatingSystem", "category"})
-    @GetMapping
+    @GetMapping("/products")
     public ResponseEntity<ProductFilterOptionsDTO> getFilterOptions(
             @RequestParam(value = "name", required = false) String name,
             @RequestParam(value = "brand", required = false) List<String> brands,
