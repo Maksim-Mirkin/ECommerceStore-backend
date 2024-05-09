@@ -111,5 +111,5 @@ GET http://localhost:8080/api/v1/products?sortBy=name
 Authorization: bearer {{adminJWT}}
 
 ### GET find product by property
-GET http://localhost:8080/api/v1/products?name=ma
+GET http://localhost:8080/api/v1/products?categoryNames=tv
 Authorization: bearer {{adminJWT}}

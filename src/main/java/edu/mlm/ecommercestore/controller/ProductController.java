@@ -6,6 +6,7 @@ import edu.mlm.ecommercestore.dto.product.ProductListDTO;
 import edu.mlm.ecommercestore.dto.product.ProductRequestDTO;
 import edu.mlm.ecommercestore.dto.product.ProductResponseDTO;
 import edu.mlm.ecommercestore.service.product.ProductService;
+import edu.mlm.ecommercestore.validator.AllowedParameters;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
@@ -100,17 +101,19 @@ public class ProductController {
             )
     })
     @GetMapping
+    @AllowedParameters({"name", "brand", "minPrice", "maxPrice", "color", "memory", "weight",
+            "batteryCapacity", "operatingSystem", "category", "pageNumber", "pageSize", "sortDir", "sortBy"})
     public ResponseEntity<ProductListDTO> findProducts(
             @RequestParam(value = "name", required = false) String name,
-            @RequestParam(value = "brands", required = false) List<String> brands,
+            @RequestParam(value = "brand", required = false) List<String> brands,
             @RequestParam(value = "minPrice", required = false) BigDecimal minPrice,
             @RequestParam(value = "maxPrice", required = false) BigDecimal maxPrice,
-            @RequestParam(value = "colors", required = false) List<String> colors,
-            @RequestParam(value = "memories", required = false) List<String> memories,
-            @RequestParam(value = "weights", required = false) List<BigDecimal> weights,
-            @RequestParam(value = "batteryCapacities", required = false) List<String> batteryCapacities,
-            @RequestParam(value = "operatingSystems", required = false) List<String> operatingSystems,
-            @RequestParam(value = "categoryNames", required = false) List<String> categoryNames,
+            @RequestParam(value = "color", required = false) List<String> colors,
+            @RequestParam(value = "memory", required = false) List<String> memories,
+            @RequestParam(value = "weight", required = false) List<BigDecimal> weights,
+            @RequestParam(value = "batteryCapacity", required = false) List<String> batteryCapacities,
+            @RequestParam(value = "operatingSystem", required = false) List<String> operatingSystems,
+            @RequestParam(value = "category", required = false) List<String> categoryNames,
             @RequestParam(value = "pageNumber", required = false, defaultValue = "0") int pageNumber,
             @RequestParam(value = "pageSize", required = false, defaultValue = "12") int pageSize,
             @RequestParam(value = "sortDir", required = false, defaultValue = "asc") String sortDir,

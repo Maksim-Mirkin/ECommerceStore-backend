@@ -2,6 +2,7 @@ package edu.mlm.ecommercestore.controller;
 
 import edu.mlm.ecommercestore.dto.filter.ProductFilterOptionsDTO;
 import edu.mlm.ecommercestore.service.filter.FilterService;
+import edu.mlm.ecommercestore.validator.AllowedParameters;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -37,18 +38,19 @@ public class FilterController {
      * @param categories        list of categories to filter by.
      * @return a {@link ProductFilterOptionsDTO} with the distinct filter options available based on the criteria.
      */
+    @AllowedParameters({"name", "brand", "minPrice", "maxPrice", "color", "memory", "weight", "batteryCapacity", "operatingSystem", "category"})
     @GetMapping
     public ResponseEntity<ProductFilterOptionsDTO> getFilterOptions(
             @RequestParam(value = "name", required = false) String name,
-            @RequestParam(value = "brands", required = false) List<String> brands,
+            @RequestParam(value = "brand", required = false) List<String> brands,
             @RequestParam(value = "minPrice", required = false) BigDecimal minPrice,
             @RequestParam(value = "maxPrice", required = false) BigDecimal maxPrice,
-            @RequestParam(value = "colors", required = false) List<String> colors,
-            @RequestParam(value = "memories", required = false) List<String> memories,
-            @RequestParam(value = "weights", required = false) List<BigDecimal> weights,
-            @RequestParam(value = "batteryCapacities", required = false) List<String> batteryCapacities,
-            @RequestParam(value = "operatingSystems", required = false) List<String> operatingSystems,
-            @RequestParam(value = "categories", required = false) List<String> categories) {
+            @RequestParam(value = "color", required = false) List<String> colors,
+            @RequestParam(value = "memory", required = false) List<String> memories,
+            @RequestParam(value = "weight", required = false) List<BigDecimal> weights,
+            @RequestParam(value = "batteryCapacity", required = false) List<String> batteryCapacities,
+            @RequestParam(value = "operatingSystem", required = false) List<String> operatingSystems,
+            @RequestParam(value = "category", required = false) List<String> categories) {
 
         ProductFilterOptionsDTO options = filterService.getProductFilterOptions(
                 name,

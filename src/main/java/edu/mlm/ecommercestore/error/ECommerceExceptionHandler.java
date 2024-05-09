@@ -31,12 +31,12 @@ public class ECommerceExceptionHandler {
     private final HttpStatus internalServerError = HttpStatus.INTERNAL_SERVER_ERROR;
 
     /**
-     * Handles custom ECommerceException which may not be annotated with @ResponseStatus.
+     * Handles custom {@link ECommerceException} which may not be annotated with {@link ResponseStatus}.
      *
-     * @param e       the ECommerceException to handle.
-     * @param method  the method in which the exception was thrown.
-     * @param request the HttpServletRequest in which the exception occurred.
-     * @return a ResponseEntity containing the ExceptionDTO and the HTTP status code.
+     * @param e       the {@link ECommerceException} to handle.
+     * @param method  the {@link HandlerMethod} in which the exception was thrown.
+     * @param request the {@link HttpServletRequest} in which the exception occurred.
+     * @return the {@link ExceptionDTO} and the HTTP status code.
      */
     @ExceptionHandler(ECommerceException.class)
     public ResponseEntity<ExceptionDTO> handleECommerceException(
@@ -54,15 +54,15 @@ public class ECommerceExceptionHandler {
     }
 
     /**
-     * Handles SQLIntegrityConstraintViolationException and maps it to a bad request HTTP status.
+     * Handles {@link SQLIntegrityConstraintViolationException} and maps it to a bad request HTTP status.
      *
-     * @param exc     the SQLIntegrityConstraintViolationException to handle.
-     * @param method  the method in which the exception was thrown.
-     * @param request the HttpServletRequest in which the exception occurred.
-     * @return a ResponseEntity containing the ExceptionDTO and HTTP status code BAD_REQUEST.
+     * @param exc     the {@link SQLIntegrityConstraintViolationException} to handle.
+     * @param method  the {@link HandlerMethod} in which the exception was thrown.
+     * @param request the {@link HttpServletRequest} in which the exception occurred.
+     * @return the {@link ExceptionDTO} and HTTP status code BAD_REQUEST.
      */
     @ExceptionHandler(SQLIntegrityConstraintViolationException.class)
-    public ResponseEntity<ExceptionDTO> handle(
+    public ResponseEntity<ExceptionDTO> handleSQLIntegrityConstraintViolationException(
             SQLIntegrityConstraintViolationException exc,
             HandlerMethod method,
             HttpServletRequest request
@@ -72,16 +72,16 @@ public class ECommerceExceptionHandler {
     }
 
     /**
-     * Handles MethodArgumentNotValidException by returning detailed validation error messages.
+     * Handles {@link MethodArgumentNotValidException} by returning detailed validation error messages.
      *
-     * @param e       the MethodArgumentNotValidException to handle.
-     * @param method  the method in which the exception was thrown.
-     * @param request the HttpServletRequest in which the exception occurred.
-     * @return a ResponseEntity containing a map of field errors and the BAD_REQUEST status.
+     * @param e       the {@link MethodArgumentNotValidException} to handle.
+     * @param method  the {@link HandlerMethod} in which the exception was thrown.
+     * @param request the {@link HttpServletRequest} in which the exception occurred.
+     * @return a {@link ResponseEntity} containing a map of field errors and the BAD_REQUEST status.
      */
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     @ExceptionHandler(MethodArgumentNotValidException.class)
-    public ResponseEntity<Map<String, Object>> handle(
+    public ResponseEntity<Map<String, Object>> handleMethodArgumentNotValidException(
             MethodArgumentNotValidException e,
             HandlerMethod method,
             HttpServletRequest request
@@ -95,34 +95,53 @@ public class ECommerceExceptionHandler {
     }
 
     /**
-     * Handles AccessDeniedException, typically thrown when an authentication or authorization failure occurs.
+     * Handles {@link AccessDeniedException}, typically thrown when an authentication or authorization failure occurs.
      *
-     * @param e       the AccessDeniedException to handle.
-     * @param method  the method in which the exception was thrown.
-     * @param request the HttpServletRequest in which the exception occurred.
-     * @return a ResponseEntity containing the ExceptionDTO and the FORBIDDEN status.
+     * @param e       the {@link AccessDeniedException} to handle.
+     * @param method  the {@link HandlerMethod} in which the exception was thrown.
+     * @param request the {@link HttpServletRequest} in which the exception occurred.
+     * @return the {@link ExceptionDTO} and the FORBIDDEN status.
      */
     @ExceptionHandler(AccessDeniedException.class)
-    public ResponseEntity<ExceptionDTO> handle(
+    public ResponseEntity<ExceptionDTO> handleAccessDeniedException(
             AccessDeniedException e,
             HandlerMethod method,
             HttpServletRequest request
     ) {
         val dto = getExceptionMessage(e, method, request, forbidden);
-        return ResponseEntity.status(forbidden).body(dto);
+        return ResponseEntity.status(HttpStatus.FORBIDDEN).body(dto);
     }
 
     /**
-     * Handles MethodArgumentTypeMismatchException, which is thrown when a method parameter is not the expected type.
+     * Handles {@link MethodArgumentTypeMismatchException}, which is thrown when a method parameter is not the expected type.
      *
-     * @param e       the MethodArgumentTypeMismatchException to handle.
-     * @param method  the method in which the exception was thrown.
-     * @param request the HttpServletRequest in which the exception occurred.
-     * @return a ResponseEntity containing the ExceptionDTO and the BAD_REQUEST status.
+     * @param e       the {@link MethodArgumentTypeMismatchException} to handle.
+     * @param method  the {@link HandlerMethod} in which the exception was thrown.
+     * @param request the {@link HttpServletRequest} in which the exception occurred.
+     * @return the {@link ExceptionDTO} and the BAD_REQUEST status.
      */
     @ExceptionHandler(MethodArgumentTypeMismatchException.class)
-    public ResponseEntity<ExceptionDTO> handle(
+    public ResponseEntity<ExceptionDTO> handleMethodArgumentTypeMismatchException(
             MethodArgumentTypeMismatchException e,
+            HandlerMethod method,
+            HttpServletRequest request
+    ) {
+        val dto = getExceptionMessage(e, method, request, badRequest);
+        return ResponseEntity.badRequest().body(dto);
+    }
+
+    /**
+     * Handles {@link IllegalArgumentException} thrown by any controller method.
+     * This handler captures the exception and constructs a detailed response based on the exception details.
+     *
+     * @param e       the {@link IllegalArgumentException} that was thrown.
+     * @param method  the {@link HandlerMethod} where the exception was thrown. This provides context such as the specific controller and method invoked.
+     * @param request the {@link HttpServletRequest} that resulted in the exception, which contains details like the HTTP request URL and parameters.
+     * @return the {@link ExceptionDTO} and the BAD_REQUEST status.
+     */
+    @ExceptionHandler(IllegalArgumentException.class)
+    public ResponseEntity<ExceptionDTO> handleIllegalArgumentException(
+            IllegalArgumentException e,
             HandlerMethod method,
             HttpServletRequest request
     ) {
@@ -133,13 +152,13 @@ public class ECommerceExceptionHandler {
     /**
      * Handles generic Exceptions that are not handled by more specific handlers above.
      *
-     * @param e       the Exception to handle.
-     * @param method  the method in which the exception was thrown.
-     * @param request the HttpServletRequest in which the exception occurred.
-     * @return a ResponseEntity containing the InternalServerExceptionDTO and INTERNAL_SERVER_ERROR status.
+     * @param e       the {@link Exception} to handle.
+     * @param method  the {@link HandlerMethod} in which the exception was thrown.
+     * @param request the {@link HttpServletRequest} in which the exception occurred.
+     * @return the {@link InternalServerExceptionDTO} and INTERNAL_SERVER_ERROR status.
      */
     @ExceptionHandler(Exception.class)
-    public ResponseEntity<InternalServerExceptionDTO> handle(
+    public ResponseEntity<InternalServerExceptionDTO> handleGenericException(
             Exception e,
             HandlerMethod method,
             HttpServletRequest request
@@ -150,10 +169,10 @@ public class ECommerceExceptionHandler {
     }
 
     /**
-     * Determines the HTTP status from the ResponseStatus annotation of an exception.
+     * Determines the HTTP status from the {@link ResponseStatus} annotation of an exception.
      *
-     * @param e the exception with the ResponseStatus annotation.
-     * @return the HTTP status defined in the ResponseStatus annotation.
+     * @param e the {@link Exception} with the {@link ResponseStatus} annotation.
+     * @return the HTTP status defined in the {@link ResponseStatus} annotation.
      */
     private HttpStatus getHttpStatus(Exception e) {
         val annotation = e.getClass().getAnnotation(ResponseStatus.class);
@@ -161,13 +180,13 @@ public class ECommerceExceptionHandler {
     }
 
     /**
-     * Creates an ExceptionDTO for logging and response purposes.
+     * Creates an {@link ExceptionDTO} for logging and response purposes.
      *
-     * @param e       the Exception to log.
-     * @param method  the method in which the exception occurred.
-     * @param request the HttpServletRequest in which the exception occurred.
+     * @param e       the {@link Exception} to log.
+     * @param method  the {@link HandlerMethod} in which the exception occurred.
+     * @param request the {@link HttpServletRequest} in which the exception occurred.
      * @param status  the HTTP status associated with the exception.
-     * @return an ExceptionDTO representing the exception details.
+     * @return an {@link ExceptionDTO} representing the exception details.
      */
     private ExceptionDTO getExceptionMessage(
             Exception e,
@@ -191,12 +210,12 @@ public class ECommerceExceptionHandler {
     }
 
     /**
-     * Creates an InternalServerExceptionDTO for logging and response purposes in case of general exceptions.
+     * Creates an {@link InternalServerExceptionDTO} for logging and response purposes in case of general exceptions.
      *
-     * @param e       the Exception to log.
-     * @param method  the method in which the exception occurred.
-     * @param request the HttpServletRequest in which the exception occurred.
-     * @return an InternalServerExceptionDTO representing the detailed exception info.
+     * @param e       the {@link Exception} to log.
+     * @param method  the {@link HandlerMethod} in which the exception occurred.
+     * @param request the {@link HttpServletRequest} in which the exception occurred.
+     * @return an {@link InternalServerExceptionDTO} representing the detailed exception info.
      */
     private InternalServerExceptionDTO getInternalServerExceptionMessage(
             Exception e,

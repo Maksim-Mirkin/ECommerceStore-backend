@@ -7,6 +7,7 @@ import edu.mlm.ecommercestore.dto.order.OrderRequestDTO;
 import edu.mlm.ecommercestore.dto.order.OrderResponseDTO;
 import edu.mlm.ecommercestore.dto.order.OrderStatusRequestDTO;
 import edu.mlm.ecommercestore.service.order.OrderService;
+import edu.mlm.ecommercestore.validator.AllowedParameters;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
@@ -139,6 +140,7 @@ public class OrderController {
     @Operation(summary = "Get Orders by Customer",
             description = "Retrieves orders for the currently authenticated customer" +
                     " with support for pagination and sorting.")
+    @AllowedParameters({"pageNumber", "pageSize", "sortDir", "sortBy"})
     @GetMapping
     public ResponseEntity<OrderListDTO> getOrdersByCustomer(
             Authentication authentication,
@@ -201,6 +203,7 @@ public class OrderController {
     @Operation(summary = "Get All Orders",
             description = "Retrieves all orders within the system for admins" +
                     " with support for pagination and sorting.")
+    @AllowedParameters({"pageNumber", "pageSize", "sortDir", "sortBy"})
     @GetMapping("/all")
     @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<OrderListDTO> getAllOrders(
