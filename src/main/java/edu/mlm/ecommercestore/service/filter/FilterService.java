@@ -25,7 +25,7 @@ public class FilterService {
     private EntityManager entityManager;
 
     /**
-     * Retrieves filter options for products based on specified criteria including name, brands, price range, colors, memories, weights, battery capacities, operating systems, and categories.
+     * Retrieves filter options for products based on specified criteria including name, brands, price range, colors, memories, screen sizes, battery capacities, operating systems, and categories.
      * The method returns distinct lists of each attribute that are available in the database that match the given filtering criteria.
      *
      * @param name the product name to filter by.
@@ -34,7 +34,7 @@ public class FilterService {
      * @param maxPrice maximum price to include in the filters.
      * @param colors list of colors to include in the filters.
      * @param memories list of memory specifications to include in the filters.
-     * @param weights list of weights to include in the filters.
+     * @param screenSizes list of screen sizes to include in the filters.
      * @param batteryCapacities list of battery capacities to include in the filters.
      * @param operatingSystems list of operating systems to include in the filters.
      * @param categories list of categories to include in the filters.
@@ -47,7 +47,7 @@ public class FilterService {
             BigDecimal maxPrice,
             List<String> colors,
             List<String> memories,
-            List<BigDecimal> weights,
+            List<String> screenSizes,
             List<String> batteryCapacities,
             List<String> operatingSystems,
             List<String> categories
@@ -58,7 +58,7 @@ public class FilterService {
                 .and(ProductSpecification.hasPriceBetween(minPrice, maxPrice, entityManager))
                 .and(ProductSpecification.hasColors(colors))
                 .and(ProductSpecification.hasMemories(memories))
-                .and(ProductSpecification.hasWeights(weights))
+                .and(ProductSpecification.hasScreenSizes(screenSizes))
                 .and(ProductSpecification.hasBatteryCapacities(batteryCapacities))
                 .and(ProductSpecification.hasOperatingSystems(operatingSystems))
                 .and(ProductSpecification.byCategories(categories));
@@ -69,7 +69,7 @@ public class FilterService {
         val uniquePrices = products.stream().map(Product::getPrice).distinct().toList();
         val uniqueColors = products.stream().map(Product::getColor).distinct().toList();
         val uniqueMemories = products.stream().map(Product::getMemory).distinct().toList();
-        val uniqueWeights = products.stream().map(Product::getWeight).distinct().toList();
+        val uniqueScreenSizes = products.stream().map(Product::getScreenSize).distinct().toList();
         val uniqueBatteryCapacities = products.stream().map(Product::getBatteryCapacity).distinct().toList();
         val uniqueOperatingSystems = products.stream().map(Product::getOperatingSystem).distinct().toList();
         val uniqueCategories = products.stream().map(Product::getCategory).map(Category::getName).distinct().toList();
@@ -79,7 +79,7 @@ public class FilterService {
                 uniquePrices,
                 uniqueColors,
                 uniqueMemories,
-                uniqueWeights,
+                uniqueScreenSizes,
                 uniqueBatteryCapacities,
                 uniqueOperatingSystems,
                 uniqueCategories

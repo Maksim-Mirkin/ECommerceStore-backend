@@ -82,10 +82,10 @@ public class ProductRequestDTO {
     private String memory;
 
     /**
-     * The weight of the product.
+     * The screen size of the product in inches.
      */
-    @Schema(description = "The weight of the product in kilograms.", example = "0.5")
-    private BigDecimal weight;
+    @Schema(description = "The screen size of the product in inches.", example = "3\"")
+    private String screenSize;
 
     /**
      * The battery capacity of the product, if applicable.

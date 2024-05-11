@@ -53,7 +53,7 @@ public class ProductController {
      * @param maxPrice          The maximum price of products to include (optional).
      * @param colors            The list of colors to filter by (optional).
      * @param memories          The list of memory capacities to filter by (optional).
-     * @param weights           The list of weights to filter by (optional).
+     * @param screenSizes       The list of screen sizes to filter by (optional).
      * @param batteryCapacities The list of battery capacities to filter by (optional).
      * @param operatingSystems  The list of operating systems to filter by (optional).
      * @param categoryNames     The list of category names to filter by (optional).
@@ -101,7 +101,7 @@ public class ProductController {
             )
     })
     @GetMapping
-    @AllowedParameters({"name", "brand", "minPrice", "maxPrice", "color", "memory", "weight",
+    @AllowedParameters({"name", "brand", "minPrice", "maxPrice", "color", "memory", "screenSize",
             "batteryCapacity", "operatingSystem", "category", "pageNumber", "pageSize", "sortDir", "sortBy"})
     public ResponseEntity<ProductListDTO> findProducts(
             @RequestParam(value = "name", required = false) String name,
@@ -110,7 +110,7 @@ public class ProductController {
             @RequestParam(value = "maxPrice", required = false) BigDecimal maxPrice,
             @RequestParam(value = "color", required = false) List<String> colors,
             @RequestParam(value = "memory", required = false) List<String> memories,
-            @RequestParam(value = "weight", required = false) List<BigDecimal> weights,
+            @RequestParam(value = "screenSize", required = false) List<String> screenSizes,
             @RequestParam(value = "batteryCapacity", required = false) List<String> batteryCapacities,
             @RequestParam(value = "operatingSystem", required = false) List<String> operatingSystems,
             @RequestParam(value = "category", required = false) List<String> categoryNames,
@@ -126,7 +126,7 @@ public class ProductController {
                 maxPrice,
                 colors,
                 memories,
-                weights,
+                screenSizes,
                 batteryCapacities,
                 operatingSystems,
                 categoryNames,

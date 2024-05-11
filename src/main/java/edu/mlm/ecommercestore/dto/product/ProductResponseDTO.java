@@ -61,7 +61,7 @@ public class ProductResponseDTO {
      */
     @Schema(
             description = "A URL or a reference to the product image.",
-            example = "http://example.com/image.jpg"
+            example = "https://example.com/image.jpg"
     )
     private String image;
 
@@ -79,10 +79,10 @@ public class ProductResponseDTO {
     private String memory;
 
     /**
-     * The weight of the product in kilograms.
+     * The screen size of the product in inches.
      */
-    @Schema(description = "The weight of the product in kilograms.", example = "0.5")
-    private BigDecimal weight;
+    @Schema(description = "The screen size of the product in inches.", example = "3\"")
+    private String screenSize;
 
     /**
      * The battery capacity of the product, if applicable.

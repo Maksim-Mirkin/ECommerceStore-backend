@@ -144,18 +144,18 @@ public class ProductSpecification {
     }
 
     /**
-     * Specification to filter products by a list of weights.
+     * Specification to filter products by a list of screen sizes.
      *
-     * @param weights a list of weights to filter by.
-     * @return a specification that matches products with any of the specified weights.
+     * @param screenSizes a list of screen sizes to filter by.
+     * @return a specification that matches products with any of the specified screen sizes.
      */
-    public static Specification<Product> hasWeights(List<BigDecimal> weights) {
+    public static Specification<Product> hasScreenSizes(List<String> screenSizes) {
         return (root, query, criteriaBuilder) -> {
-            if (weights == null || weights.isEmpty()) {
+            if (screenSizes == null || screenSizes.isEmpty()) {
                 return null;
             } else {
-                CriteriaBuilder.In<BigDecimal> inClause = criteriaBuilder.in(root.get("weight"));
-                weights.forEach(inClause::value);
+                CriteriaBuilder.In<String> inClause = criteriaBuilder.in(root.get("screenSize"));
+                screenSizes.forEach(screenSize -> inClause.value(screenSize.trim()));
                 return inClause;
             }
         };

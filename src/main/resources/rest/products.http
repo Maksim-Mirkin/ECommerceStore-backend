@@ -4,17 +4,36 @@ Content-Type: application/json
 Authorization: bearer {{adminJWT}}
 
 {
-  "name": "iPhone 15",
-  "price": 799,
+  "name": "iPhone 15 Pro Max",
+  "price": 899,
   "brand": "Apple",
   "description": "Its innovative design includes a durable colour-infused glass and aluminium build, which is splash, water, and dust resistant. The Ceramic Shield front adds robustness, and the 6.1\" Super Retina XDR display ensures a vibrant and clear viewing experience, even in bright sunlight.",
   "image": "https://nextech.co.il/wp-content/uploads/2023/09/natural-iphone-15-pro-sku-header-120923.png",
   "category": "cellular",
   "memory": "256GB",
-  "weight": 171,
+  "screenSize": "6.1\"",
   "batteryCapacity": "3349mAh",
   "operatingSystem": "iOS",
   "color": "Platinum"
+}
+
+### POST new product(cellular)
+POST http://localhost:8080/api/v1/products
+Content-Type: application/json
+Authorization: bearer {{adminJWT}}
+
+{
+  "name": "Samsung Galaxy S22",
+  "price": 250,
+  "brand": "Samsung",
+  "description": "The Samsung Galaxy S22 specs are top-notch including a Snapdragon 8 Gen 1 chipset, 8GB RAM coupled with 256GB storage, and a 3700mAh battery with 25W charging speed. The phone sports a 6.1-inch Dynamic AMOLED display with an adaptive 120Hz refresh rate.",
+  "image": "https://images.samsung.com/is/image/samsung/p6pim/il/2202/gallery/il-galaxy-s22-ultra-s908-412982-sm-s908edrgmec-thumb-530967405",
+  "category": "cellular",
+  "memory": "128GB",
+  "screenSize": "6.1\"",
+  "batteryCapacity": "3700mAh",
+  "operatingSystem": "Android",
+  "color": "Green"
 }
 
 ### POST new product(laptop)
@@ -30,7 +49,7 @@ Authorization: bearer {{adminJWT}}
   "image": "https://epalle.co.il/wp-content/uploads/2022/06/macbook-air-m2-midnight-front.webp",
   "category": "laptop",
   "memory": "256GB",
-  "weight": 1250,
+  "screenSize": "13.6\"",
   "batteryCapacity": "52.6Wh",
   "operatingSystem": "macOS",
   "color": "Midnight blue"
@@ -48,7 +67,6 @@ Authorization: bearer {{adminJWT}}
   "description": "AirPods Max combine high-fidelity audio with industry-leading Active Noise Cancellation to deliver an unparalleled listening experience. Each part of their custom-built driver works to produce sound with ultra-low distortion across the audible range.",
   "image": "https://www.apple.com/v/airpods-max/f/images/overview/hero__gnfk5g59t0qe_xlarge.png",
   "category": "headphone",
-  "weight": 384.8,
   "batteryCapacity": "664mAh",
   "color": "Silver"
 }
@@ -65,7 +83,7 @@ Authorization: bearer {{adminJWT}}
   "description": "Smart TV features are paired with brilliant self-lit pixels in the S90C 65\" 4K HDR OLED TV from Samsung. The OLED panel offers bright whites, deep blacks, and vivid colors in stunning 4K resolution. Even if your content is not in 4K, Samsung's Neural Quantum processor can utilize AI-based 4K upscaling to improve its appearance.",
   "image": "https://images.samsung.com/is/image/samsung/p6pim/ca/qn65s90cafxzc/gallery/ca-oled-tv-qn65s90cafxzc-front-black-titanium-535999692?$624_624_PNG$",
   "category": "tv",
-  "weight": 35200,
+  "screenSize": "65\"",
   "operatingSystem": "Tizen OS",
   "color": "Black"
 }
@@ -111,5 +129,7 @@ GET http://localhost:8080/api/v1/products?sortBy=name
 Authorization: bearer {{adminJWT}}
 
 ### GET find product by property
-GET http://localhost:8080/api/v1/products?categoryNames=tv
+GET http://localhost:8080/api/v1/products?pageNumber=0&pageSize=1&sortBy=name&sortDir=asc&name=samsung&brand=samsung&
+    minPrice=100&maxPrice=1000&color=black&memory=256GB&screenSizes=35200&batteryCapacity=664mAh&
+    operatingSystem=Tizen%20OS&category=tv
 Authorization: bearer {{adminJWT}}

@@ -41,7 +41,7 @@ public class FilterController {
      * @param maxPrice          maximum price to filter by.
      * @param colors            list of colors to filter by.
      * @param memories          list of memory specifications to filter by.
-     * @param weights           list of weights to filter by.
+     * @param screenSizes       list of screen sizes to filter by.
      * @param batteryCapacities list of battery capacities to filter by.
      * @param operatingSystems  list of operating systems to filter by.
      * @param categories        list of categories to filter by.
@@ -75,7 +75,7 @@ public class FilterController {
                             )
             )
     })
-    @AllowedParameters({"name", "brand", "minPrice", "maxPrice", "color", "memory", "weight", "batteryCapacity", "operatingSystem", "category"})
+    @AllowedParameters({"name", "brand", "minPrice", "maxPrice", "color", "memory", "screenSize", "batteryCapacity", "operatingSystem", "category"})
     @GetMapping("/products")
     public ResponseEntity<ProductFilterOptionsDTO> getFilterOptions(
             @RequestParam(value = "name", required = false) String name,
@@ -84,7 +84,7 @@ public class FilterController {
             @RequestParam(value = "maxPrice", required = false) BigDecimal maxPrice,
             @RequestParam(value = "color", required = false) List<String> colors,
             @RequestParam(value = "memory", required = false) List<String> memories,
-            @RequestParam(value = "weight", required = false) List<BigDecimal> weights,
+            @RequestParam(value = "screenSize", required = false) List<String> screenSizes,
             @RequestParam(value = "batteryCapacity", required = false) List<String> batteryCapacities,
             @RequestParam(value = "operatingSystem", required = false) List<String> operatingSystems,
             @RequestParam(value = "category", required = false) List<String> categories) {
@@ -96,7 +96,7 @@ public class FilterController {
                 maxPrice,
                 colors,
                 memories,
-                weights,
+                screenSizes,
                 batteryCapacities,
                 operatingSystems,
                 categories

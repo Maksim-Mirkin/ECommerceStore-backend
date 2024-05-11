@@ -63,8 +63,8 @@ public class Product {
     @Schema(description = "The memory capacity of the product", example = "128GB")
     private String memory;
 
-    @Schema(description = "The weight of the product in kilograms", example = "0.174")
-    private BigDecimal weight;
+    @Schema(description = "The screen size of the product in inches", example = "11\"")
+    private String screenSize;
 
     @Schema(description = "The battery capacity of the product", example = "2815mAh")
     private String batteryCapacity;

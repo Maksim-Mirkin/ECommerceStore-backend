@@ -61,7 +61,7 @@ public interface ProductService {
      * @param maxPrice          The maximum price of products to include (optional).
      * @param colors            The list of colors to filter by (optional).
      * @param memories          The list of memory capacities to filter by (optional).
-     * @param weights           The list of weights to filter by (optional).
+     * @param screenSizes       The list of screen sizes to filter by (optional).
      * @param batteryCapacities The list of battery capacities to filter by (optional).
      * @param operatingSystems  The list of operating systems to filter by (optional).
      * @param categoryNames     The list of category names to filter by (optional).
@@ -80,7 +80,7 @@ public interface ProductService {
             BigDecimal maxPrice,
             List<String> colors,
             List<String> memories,
-            List<BigDecimal> weights,
+            List<String> screenSizes,
             List<String> batteryCapacities,
             List<String> operatingSystems,
             List<String> categoryNames,

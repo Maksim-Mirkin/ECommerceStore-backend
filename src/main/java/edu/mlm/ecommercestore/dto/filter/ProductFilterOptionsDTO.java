@@ -30,8 +30,8 @@ public class ProductFilterOptionsDTO {
     @Schema(description = "List of available memory capacities for filtering products")
     private List<String> memories;
 
-    @Schema(description = "List of weights available for filtering products, typically measured in units like kg or lbs")
-    private List<BigDecimal> weights;
+    @Schema(description = "List of screen sizes available for filtering products, measured in inches")
+    private List<String> screenSizes;
 
     @Schema(description = "List of battery capacities available for filtering products, typically measured in mAh")
     private List<String> batteryCapacities;

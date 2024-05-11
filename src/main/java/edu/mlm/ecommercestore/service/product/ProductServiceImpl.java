@@ -71,7 +71,7 @@ public class ProductServiceImpl implements ProductService {
             BigDecimal maxPrice,
             List<String> colors,
             List<String> memories,
-            List<BigDecimal> weights,
+            List<String> screenSizes,
             List<String> batteryCapacities,
             List<String> operatingSystems,
             List<String> categoryNames,
@@ -86,7 +86,7 @@ public class ProductServiceImpl implements ProductService {
                     .and(ProductSpecification.hasPriceBetween(minPrice, maxPrice, entityManager))
                     .and(ProductSpecification.hasColors(colors))
                     .and(ProductSpecification.hasMemories(memories))
-                    .and(ProductSpecification.hasWeights(weights))
+                    .and(ProductSpecification.hasScreenSizes(screenSizes))
                     .and(ProductSpecification.hasBatteryCapacities(batteryCapacities))
                     .and(ProductSpecification.hasOperatingSystems(operatingSystems))
                     .and(ProductSpecification.byCategories(categoryNames));
