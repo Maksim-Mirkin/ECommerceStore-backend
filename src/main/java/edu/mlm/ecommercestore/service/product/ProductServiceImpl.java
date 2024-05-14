@@ -97,6 +97,10 @@ public class ProductServiceImpl implements ProductService {
 
             Page<Product> pr = productRepository.findAll(spec, pageable);
 
+            if(pageNumber==0){
+                return mapProductPageToDTO(pr);
+            }
+
             if (pageNumber >= pr.getTotalPages()) {
                 throw new PaginationException("Page number " + pageNumber + " exceeds total pages " + pr.getTotalPages());
             }

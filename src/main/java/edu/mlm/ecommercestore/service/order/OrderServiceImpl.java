@@ -153,6 +153,8 @@ public class OrderServiceImpl implements OrderService {
         return modelMapper.map(saved, OrderResponseDTO.class);
     }
 
+
+    //TODO: Check if filtering return nothing
     /**
      * Retrieves a paginated list DTO of orders.
      *
