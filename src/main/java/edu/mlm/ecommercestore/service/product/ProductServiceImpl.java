@@ -18,6 +18,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.val;
 import org.modelmapper.ModelMapper;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.jpa.domain.Specification;
@@ -26,6 +27,9 @@ import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
 
 /**
@@ -78,10 +82,10 @@ public class ProductServiceImpl implements ProductService {
             int pageNumber,
             int pageSize,
             String sortDir,
-            String... sortBy
+            String sortBy
     ) {
         try {
-            val spec = Specification.where(ProductSpecification.hasName(name))
+            Specification<Product> spec = Specification.where(ProductSpecification.hasName(name))
                     .and(ProductSpecification.hasBrands(brands))
                     .and(ProductSpecification.hasPriceBetween(minPrice, maxPrice, entityManager))
                     .and(ProductSpecification.hasColors(colors))
@@ -91,22 +95,25 @@ public class ProductServiceImpl implements ProductService {
                     .and(ProductSpecification.hasOperatingSystems(operatingSystems))
                     .and(ProductSpecification.byCategories(categoryNames));
 
-            val sort = Sort.Direction.fromString(sortDir);
+            Sort.Direction direction = Sort.Direction.fromString(sortDir);
 
-            val pageable = PageRequest.of(pageNumber, pageSize, sort, sortBy);
+            PageRequest pageRequest = PageRequest.of(pageNumber, pageSize, Sort.by(direction, sortBy));
+            Page<Product> productPage = productRepository.findAll(spec, pageRequest);
 
-            Page<Product> pr = productRepository.findAll(spec, pageable);
+            List<Product> products = new ArrayList<>(productPage.getContent());
 
-            if(pageNumber==0){
-                return mapProductPageToDTO(pr);
+            products.forEach(Product::calculateAverageRating);
+
+            if ("ratings".equalsIgnoreCase(sortBy)) {
+                products.sort(Comparator.comparingDouble(Product::getAverageRating));
+                if (direction == Sort.Direction.DESC) {
+                    Collections.reverse(products);
+                }
             }
 
-            if (pageNumber >= pr.getTotalPages()) {
-                throw new PaginationException("Page number " + pageNumber + " exceeds total pages " + pr.getTotalPages());
-            }
+            Page<Product> sortedPage = new PageImpl<>(products, pageRequest, productPage.getTotalElements());
 
-
-            return mapProductPageToDTO(pr);
+            return mapProductPageToDTO(sortedPage);
         } catch (IllegalArgumentException e) {
             throw new PaginationException(e.getMessage());
         } catch (PropertyReferenceException e) {
@@ -170,7 +177,7 @@ public class ProductServiceImpl implements ProductService {
      * @return a ProductResponseDTO that represents the given product
      */
     private ProductResponseDTO getProductResponseDTO(Product product) {
-        product.calculateAverageRating();
+//        product.calculateAverageRating();
         val productResponseDTO = modelMapper.map(product, ProductResponseDTO.class);
         productResponseDTO.setCategory(product.getCategory().getName());
         return productResponseDTO;

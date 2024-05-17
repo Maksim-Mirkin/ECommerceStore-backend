@@ -117,7 +117,7 @@ public class ProductController {
             @RequestParam(value = "pageNumber", required = false, defaultValue = "0") int pageNumber,
             @RequestParam(value = "pageSize", required = false, defaultValue = "12") int pageSize,
             @RequestParam(value = "sortDir", required = false, defaultValue = "asc") String sortDir,
-            @RequestParam(value = "sortBy", required = false, defaultValue = "id") String... sortBy
+            @RequestParam(value = "sortBy", required = false, defaultValue = "id") String sortBy
     ) {
         return ResponseEntity.ok(productService.findProducts(
                 name,

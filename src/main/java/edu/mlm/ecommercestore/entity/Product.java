@@ -23,7 +23,7 @@ import java.util.List;
         @Index(name = "idx_product_price", columnList = "price"),
         @Index(name = "idx_product_color", columnList = "color"),
         @Index(name = "idx_product_memory", columnList = "memory"),
-        @Index(name = "idx_product_weight", columnList = "weight"),
+        @Index(name = "idx_product_screen_size", columnList = "screenSize"),
         @Index(name = "idx_product_battery_capacity", columnList = "batteryCapacity"),
         @Index(name = "idx_product_operatingSystem", columnList = "operatingSystem")
 })
@@ -110,10 +110,5 @@ public class Product {
             sumOfRatings += rating.getRating();
         }
         averageRating = (double) sumOfRatings / totalRatings;
-    }
-
-    public double getAverageRating(Product product) {
-        product.calculateAverageRating();
-        return product.getAverageRating();
     }
 }

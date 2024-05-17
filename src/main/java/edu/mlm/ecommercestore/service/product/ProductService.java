@@ -68,7 +68,7 @@ public interface ProductService {
      * @param pageNumber        The page number for pagination.
      * @param pageSize          The page size for pagination.
      * @param sortDir           The sort direction (ascending or descending).
-     * @param sortBy            The field(s) to sort by.
+     * @param sortBy            The field to sort by.
      * @return A {@link ProductListDTO} containing the list of products matching the criteria.
      * @throws PaginationException      if pagination parameters are invalid or if the specified page number exceeds the total pages.
      * @throws InvalidPropertyException if a property referenced in sorting or filtering criteria is invalid.
@@ -87,7 +87,7 @@ public interface ProductService {
             int pageNumber,
             int pageSize,
             String sortDir,
-            String... sortBy
+            String sortBy
     );
 
     /**
