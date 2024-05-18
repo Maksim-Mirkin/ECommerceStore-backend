@@ -28,8 +28,6 @@ import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
 import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Comparator;
 import java.util.List;
 
 /**
@@ -85,7 +83,7 @@ public class ProductServiceImpl implements ProductService {
             String sortBy
     ) {
         try {
-            Specification<Product> spec = Specification.where(ProductSpecification.hasName(name))
+            val spec = Specification.where(ProductSpecification.hasName(name))
                     .and(ProductSpecification.hasBrands(brands))
                     .and(ProductSpecification.hasPriceBetween(minPrice, maxPrice, entityManager))
                     .and(ProductSpecification.hasColors(colors))
@@ -95,23 +93,29 @@ public class ProductServiceImpl implements ProductService {
                     .and(ProductSpecification.hasOperatingSystems(operatingSystems))
                     .and(ProductSpecification.byCategories(categoryNames));
 
-            Sort.Direction direction = Sort.Direction.fromString(sortDir);
+            PageRequest pageRequest = PageRequest.of(pageNumber, pageSize);
+            Page<Product> productPage;
 
-            PageRequest pageRequest = PageRequest.of(pageNumber, pageSize, Sort.by(direction, sortBy));
-            Page<Product> productPage = productRepository.findAll(spec, pageRequest);
+            if ("ratings".equalsIgnoreCase(sortBy)) {
+                if ("desc".equalsIgnoreCase(sortDir)) {
+                    productPage = productRepository.findAllOrderByAverageRatingDesc(pageRequest);
+                } else {
+                    productPage = productRepository.findAllOrderByAverageRatingAsc(pageRequest);
+                }
+            } else {
+                Sort.Direction direction = Sort.Direction.fromString(sortDir);
+                pageRequest = PageRequest.of(pageNumber, pageSize, Sort.by(direction, sortBy));
+                productPage = productRepository.findAll(spec, pageRequest);
+            }
 
             List<Product> products = new ArrayList<>(productPage.getContent());
 
             products.forEach(Product::calculateAverageRating);
-
-            if ("ratings".equalsIgnoreCase(sortBy)) {
-                products.sort(Comparator.comparingDouble(Product::getAverageRating));
-                if (direction == Sort.Direction.DESC) {
-                    Collections.reverse(products);
-                }
-            }
-
             Page<Product> sortedPage = new PageImpl<>(products, pageRequest, productPage.getTotalElements());
+
+            if (pageNumber >= sortedPage.getTotalPages()) {
+                throw new PaginationException("Page Number " + pageNumber + " Exceeds totalPages " + sortedPage.getTotalPages());
+            }
 
             return mapProductPageToDTO(sortedPage);
         } catch (IllegalArgumentException e) {

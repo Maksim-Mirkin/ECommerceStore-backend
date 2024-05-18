@@ -2,8 +2,11 @@ package edu.mlm.ecommercestore.repository;
 
 import edu.mlm.ecommercestore.entity.Product;
 import jakarta.annotation.Nullable;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
+import org.springframework.data.jpa.repository.Query;
 
 
 /**
@@ -26,4 +29,10 @@ public interface ProductRepository extends JpaRepository<Product, Long>, JpaSpec
      * @return {@code true} if a {@link Product} with the specified ID exists, {@code false} otherwise.
      */
     boolean existsById(@Nullable Long id);
+
+    @Query("SELECT p FROM Product p LEFT JOIN p.ratings r GROUP BY p.id ORDER BY AVG(r.rating) DESC")
+    Page<Product> findAllOrderByAverageRatingDesc(Pageable pageable);
+
+    @Query("SELECT p FROM Product p LEFT JOIN p.ratings r GROUP BY p.id ORDER BY AVG(r.rating) ASC")
+    Page<Product> findAllOrderByAverageRatingAsc(Pageable pageable);
 }
