@@ -182,6 +182,7 @@ public class ProductServiceImpl implements ProductService {
      * @return a ProductResponseDTO that represents the given product
      */
     private ProductResponseDTO getProductResponseDTO(Product product) {
+        product.calculateAverageRating();
         val productResponseDTO = modelMapper.map(product, ProductResponseDTO.class);
         productResponseDTO.setCategory(product.getCategory().getName());
         return productResponseDTO;
