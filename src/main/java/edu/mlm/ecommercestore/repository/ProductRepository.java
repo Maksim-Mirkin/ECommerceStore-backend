@@ -30,9 +30,21 @@ public interface ProductRepository extends JpaRepository<Product, Long>, JpaSpec
      */
     boolean existsById(@Nullable Long id);
 
+    /**
+     * Retrieves a paginated list of {@link Product} entities ordered by their average rating in descending order.
+     *
+     * @param pageable The pagination information.
+     * @return A paginated list of {@link Product} entities ordered by their average rating in descending order.
+     */
     @Query("SELECT p FROM Product p LEFT JOIN p.ratings r GROUP BY p.id ORDER BY AVG(r.rating) DESC")
     Page<Product> findAllOrderByAverageRatingDesc(Pageable pageable);
 
+    /**
+     * Retrieves a paginated list of {@link Product} entities ordered by their average rating in ascending order.
+     *
+     * @param pageable The pagination information.
+     * @return A paginated list of {@link Product} entities ordered by their average rating in ascending order.
+     */
     @Query("SELECT p FROM Product p LEFT JOIN p.ratings r GROUP BY p.id ORDER BY AVG(r.rating) ASC")
     Page<Product> findAllOrderByAverageRatingAsc(Pageable pageable);
 }
