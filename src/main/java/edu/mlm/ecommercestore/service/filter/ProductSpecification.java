@@ -2,10 +2,8 @@ package edu.mlm.ecommercestore.service.filter;
 
 import edu.mlm.ecommercestore.entity.Category;
 import edu.mlm.ecommercestore.entity.Product;
-import jakarta.persistence.EntityManager;
 import jakarta.persistence.criteria.CriteriaBuilder;
 import jakarta.persistence.criteria.Join;
-import lombok.val;
 import org.springframework.data.jpa.domain.Specification;
 
 import java.math.BigDecimal;
@@ -32,34 +30,6 @@ public class ProductSpecification {
     }
 
     /**
-     * Retrieves the minimum product price from the database.
-     *
-     * @param entityManager the EntityManager to facilitate the query.
-     * @return the minimum price of all products as BigDecimal.
-     */
-    public static BigDecimal getMinPrice(EntityManager entityManager) {
-        val criteriaBuilder = entityManager.getCriteriaBuilder();
-        val query = criteriaBuilder.createQuery(BigDecimal.class);
-        val root = query.from(Product.class);
-        query.select(criteriaBuilder.min(root.get("price")));
-        return entityManager.createQuery(query).getSingleResult();
-    }
-
-    /**
-     * Retrieves the maximum product price from the database.
-     *
-     * @param entityManager the EntityManager to facilitate the query.
-     * @return the maximum price of all products as BigDecimal.
-     */
-    public static BigDecimal getMaxPrice(EntityManager entityManager) {
-        val criteriaBuilder = entityManager.getCriteriaBuilder();
-        val query = criteriaBuilder.createQuery(BigDecimal.class);
-        val root = query.from(Product.class);
-        query.select(criteriaBuilder.max(root.get("price")));
-        return entityManager.createQuery(query).getSingleResult();
-    }
-
-    /**
      * Specification to filter products by a list of brands.
      *
      * @param brands a list of brands to filter by.
@@ -80,29 +50,20 @@ public class ProductSpecification {
     /**
      * Specification to filter products by price range.
      *
-     * @param minPrice      minimum price filter value.
-     * @param maxPrice      maximum price filter value.
-     * @param entityManager the EntityManager to handle dynamic fetching of minimum and maximum prices if needed.
+     * @param minPrice minimum price filter value.
+     * @param maxPrice maximum price filter value.
      * @return a specification that matches products whose prices fall between the specified range.
      */
-    public static Specification<Product> hasPriceBetween(BigDecimal minPrice, BigDecimal maxPrice, EntityManager entityManager) {
-        val actualMinPrice = getMinPrice(entityManager);
-        val actualMaxPrice = getMaxPrice(entityManager);
-
-        minPrice = (minPrice == null || minPrice.compareTo(actualMinPrice) < 0) ? actualMinPrice : minPrice;
-        maxPrice = (maxPrice == null || maxPrice.compareTo(actualMaxPrice) > 0) ? actualMaxPrice : maxPrice;
-
-        val finalMinPrice = minPrice;
-        val finalMaxPrice = maxPrice;
+    public static Specification<Product> hasPriceBetween(BigDecimal minPrice, BigDecimal maxPrice) {
         return (root, criteriaQuery, criteriaBuilder) -> {
-            if (finalMinPrice == null && finalMaxPrice == null) {
+            if (minPrice == null && maxPrice == null) {
                 return null;
-            } else if (finalMinPrice == null) {
-                return criteriaBuilder.lessThanOrEqualTo(root.get("price"), finalMaxPrice);
-            } else if (finalMaxPrice == null) {
-                return criteriaBuilder.greaterThanOrEqualTo(root.get("price"), finalMinPrice);
+            } else if (minPrice == null) {
+                return criteriaBuilder.lessThanOrEqualTo(root.get("price"), maxPrice);
+            } else if (maxPrice == null) {
+                return criteriaBuilder.greaterThanOrEqualTo(root.get("price"), minPrice);
             } else {
-                return criteriaBuilder.between(root.get("price"), finalMinPrice, finalMaxPrice);
+                return criteriaBuilder.between(root.get("price"), minPrice, maxPrice);
             }
         };
     }

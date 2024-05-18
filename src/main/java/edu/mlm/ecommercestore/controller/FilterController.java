@@ -18,7 +18,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
-import java.math.BigDecimal;
 import java.util.List;
 
 /**
@@ -37,8 +36,6 @@ public class FilterController {
      *
      * @param name              the product name to filter by.
      * @param brands            list of brands to filter by.
-     * @param minPrice          minimum price to filter by.
-     * @param maxPrice          maximum price to filter by.
      * @param colors            list of colors to filter by.
      * @param memories          list of memory specifications to filter by.
      * @param screenSizes       list of screen sizes to filter by.
@@ -75,13 +72,11 @@ public class FilterController {
                             )
             )
     })
-    @AllowedParameters({"name", "brand", "minPrice", "maxPrice", "color", "memory", "screenSize", "batteryCapacity", "operatingSystem", "category"})
+    @AllowedParameters({"name", "brand", "color", "memory", "screenSize", "batteryCapacity", "operatingSystem", "category"})
     @GetMapping("/products")
     public ResponseEntity<ProductFilterOptionsDTO> getFilterOptions(
             @RequestParam(value = "name", required = false) String name,
             @RequestParam(value = "brand", required = false) List<String> brands,
-            @RequestParam(value = "minPrice", required = false) BigDecimal minPrice,
-            @RequestParam(value = "maxPrice", required = false) BigDecimal maxPrice,
             @RequestParam(value = "color", required = false) List<String> colors,
             @RequestParam(value = "memory", required = false) List<String> memories,
             @RequestParam(value = "screenSize", required = false) List<String> screenSizes,
@@ -92,8 +87,6 @@ public class FilterController {
         ProductFilterOptionsDTO options = filterService.getProductFilterOptions(
                 name,
                 brands,
-                minPrice,
-                maxPrice,
                 colors,
                 memories,
                 screenSizes,

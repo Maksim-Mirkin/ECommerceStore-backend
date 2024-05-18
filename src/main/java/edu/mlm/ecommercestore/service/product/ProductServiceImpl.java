@@ -12,8 +12,6 @@ import edu.mlm.ecommercestore.repository.CategoryRepository;
 import edu.mlm.ecommercestore.repository.ProductRepository;
 import edu.mlm.ecommercestore.repository.UserRepository;
 import edu.mlm.ecommercestore.service.filter.ProductSpecification;
-import jakarta.persistence.EntityManager;
-import jakarta.persistence.PersistenceContext;
 import lombok.RequiredArgsConstructor;
 import lombok.val;
 import org.modelmapper.ModelMapper;
@@ -47,8 +45,6 @@ public class ProductServiceImpl implements ProductService {
     private final ModelMapper modelMapper;
     private final UserRepository userRepository;
     private final CategoryRepository categoryRepository;
-    @PersistenceContext
-    private EntityManager entityManager;
 
     /**
      * {@inheritDoc}
@@ -86,7 +82,7 @@ public class ProductServiceImpl implements ProductService {
         try {
             Specification<Product> spec = Specification.where(ProductSpecification.hasName(name))
                     .and(ProductSpecification.hasBrands(brands))
-                    .and(ProductSpecification.hasPriceBetween(minPrice, maxPrice, entityManager))
+                    .and(ProductSpecification.hasPriceBetween(minPrice, maxPrice))
                     .and(ProductSpecification.hasColors(colors))
                     .and(ProductSpecification.hasMemories(memories))
                     .and(ProductSpecification.hasScreenSizes(screenSizes))
