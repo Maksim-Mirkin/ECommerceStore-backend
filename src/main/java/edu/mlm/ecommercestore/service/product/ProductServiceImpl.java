@@ -27,7 +27,8 @@ import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
-import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
 
 /**
@@ -83,7 +84,7 @@ public class ProductServiceImpl implements ProductService {
             String sortBy
     ) {
         try {
-            val spec = Specification.where(ProductSpecification.hasName(name))
+            Specification<Product> spec = Specification.where(ProductSpecification.hasName(name))
                     .and(ProductSpecification.hasBrands(brands))
                     .and(ProductSpecification.hasPriceBetween(minPrice, maxPrice, entityManager))
                     .and(ProductSpecification.hasColors(colors))
@@ -93,31 +94,35 @@ public class ProductServiceImpl implements ProductService {
                     .and(ProductSpecification.hasOperatingSystems(operatingSystems))
                     .and(ProductSpecification.byCategories(categoryNames));
 
-            PageRequest pageRequest = PageRequest.of(pageNumber, pageSize);
+            var pageRequest = PageRequest.of(pageNumber, pageSize);
             Page<Product> productPage;
 
             if ("ratings".equalsIgnoreCase(sortBy)) {
+                val filteredProducts = productRepository.findAll(spec);
+
+                filteredProducts.forEach(Product::calculateAverageRating);
+
+                filteredProducts.sort(Comparator.comparingDouble(Product::getAverageRating));
                 if ("desc".equalsIgnoreCase(sortDir)) {
-                    productPage = productRepository.findAllOrderByAverageRatingDesc(pageRequest);
-                } else {
-                    productPage = productRepository.findAllOrderByAverageRatingAsc(pageRequest);
+                    Collections.reverse(filteredProducts);
                 }
+
+                val start = Math.min((int) pageRequest.getOffset(), filteredProducts.size());
+                val end = Math.min((start + pageRequest.getPageSize()), filteredProducts.size());
+                val pagedProducts = filteredProducts.subList(start, end);
+
+                productPage = new PageImpl<>(pagedProducts, pageRequest, filteredProducts.size());
             } else {
-                Sort.Direction direction = Sort.Direction.fromString(sortDir);
+                val direction = Sort.Direction.fromString(sortDir);
                 pageRequest = PageRequest.of(pageNumber, pageSize, Sort.by(direction, sortBy));
                 productPage = productRepository.findAll(spec, pageRequest);
             }
 
-            List<Product> products = new ArrayList<>(productPage.getContent());
-
-            products.forEach(Product::calculateAverageRating);
-            Page<Product> sortedPage = new PageImpl<>(products, pageRequest, productPage.getTotalElements());
-
-            if (pageNumber >= sortedPage.getTotalPages()) {
-                throw new PaginationException("Page Number " + pageNumber + " Exceeds totalPages " + sortedPage.getTotalPages());
+            if (pageNumber >= productPage.getTotalPages()) {
+                throw new PaginationException("Page Number " + pageNumber + " Exceeds totalPages " + productPage.getTotalPages());
             }
 
-            return mapProductPageToDTO(sortedPage);
+            return mapProductPageToDTO(productPage);
         } catch (IllegalArgumentException e) {
             throw new PaginationException(e.getMessage());
         } catch (PropertyReferenceException e) {
@@ -181,7 +186,6 @@ public class ProductServiceImpl implements ProductService {
      * @return a ProductResponseDTO that represents the given product
      */
     private ProductResponseDTO getProductResponseDTO(Product product) {
-//        product.calculateAverageRating();
         val productResponseDTO = modelMapper.map(product, ProductResponseDTO.class);
         productResponseDTO.setCategory(product.getCategory().getName());
         return productResponseDTO;
