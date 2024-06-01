@@ -9,7 +9,7 @@ import jakarta.validation.constraints.Size;
 import lombok.*;
 
 /**
- * Data Transfer Object for user registration or update requests.
+ * Data Transfer Object for user registration.
  * Includes essential user information such as username, email, and password with specific validation rules.
  */
 @Data
@@ -52,4 +52,12 @@ public class UserRequestDTO {
             " lower and uppercase letters, and special characters.",
             example = "SecureP@ss123")
     private String password;
+
+    /**
+     * The image of the user.
+     */
+    @NotNull
+    @Schema(description = "The image of the user.",
+            example = "https://example.com/image.jpg")
+    private String userImage;
 }

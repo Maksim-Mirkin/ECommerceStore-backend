@@ -4,11 +4,8 @@ import edu.mlm.ecommercestore.dto.exception.ExceptionDTO;
 import edu.mlm.ecommercestore.dto.exception.InternalServerExceptionDTO;
 import edu.mlm.ecommercestore.dto.login.LoginRequestDTO;
 import edu.mlm.ecommercestore.dto.login.LoginResponseDTO;
-import edu.mlm.ecommercestore.dto.user.UserDetailsResponseDTO;
-import edu.mlm.ecommercestore.dto.user.UserRequestDTO;
-import edu.mlm.ecommercestore.dto.user.UserResponseDTO;
+import edu.mlm.ecommercestore.dto.user.*;
 import edu.mlm.ecommercestore.service.auth.AuthService;
-import io.swagger.v3.oas.annotations.Hidden;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
@@ -17,6 +14,7 @@ import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import lombok.val;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
@@ -74,22 +72,35 @@ public class AuthController {
      * @param authentication The Authentication object providing context about the currently authenticated user.
      * @return {@link UserDetailsResponseDTO} containing the details of the authenticated user.
      */
-    @Hidden
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Successfully retrieved user details"),
+            @ApiResponse(responseCode = "404",
+                    description = "User not found",
+                    content = @Content(
+                            mediaType = "application/json",
+                            schema = @Schema(implementation = ExceptionDTO.class)
+                    )
+            ),
+            @ApiResponse(responseCode = "500",
+                    description = "Internal server error",
+                    content = @Content(
+                            mediaType = "application/json",
+                            schema = @Schema(implementation = InternalServerExceptionDTO.class)
+                    )
+            )
+    })
     @Operation(summary = "Get current user details",
             description = "Retrieves details of the currently authenticated user.")
-    @GetMapping("/me")
-    public ResponseEntity<UserDetailsResponseDTO> userDetails(Authentication authentication) {
-        var res = UserDetailsResponseDTO.builder()
-                .username(authentication.getName())
-                .roles(authentication.getAuthorities())
-                .build();
+    @GetMapping("/current-user")
+    public ResponseEntity<UserResponseDTO> userDetails(Authentication authentication) {
+        val res = authService.getUserDetails(authentication);
         return ResponseEntity.ok(res);
     }
 
     /**
      * Registers a new user in the system.
      *
-     * @param dto The user registration request data transfer object containing user details.
+     * @param dto        The user registration request data transfer object containing user details.
      * @param uriBuilder A UriComponentsBuilder for building the URI of the newly created resource.
      * @return {@link UserResponseDTO} containing the registered user's details and location header of the login endpoint.
      */
@@ -120,5 +131,76 @@ public class AuthController {
         return ResponseEntity
                 .created(uriBuilder.path("/login").build().toUri())
                 .body(authService.register(dto));
+    }
+
+    /**
+     * Updates the user data based on the provided {@link UserUpdateDataDTO}.
+     *
+     * @param dto the {@link UserUpdateDataDTO} containing the user's new data
+     * @return a {@link UserResponseDTO} containing the updated user's details
+     */
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Successfully updated user data"),
+            @ApiResponse(responseCode = "404",
+                    description = "User not found",
+                    content = @Content(
+                            mediaType = "application/json",
+                            schema = @Schema(implementation = ExceptionDTO.class)
+                    )
+            ),
+            @ApiResponse(responseCode = "500",
+                    description = "Internal server error",
+                    content = @Content(
+                            mediaType = "application/json",
+                            schema = @Schema(implementation = InternalServerExceptionDTO.class)
+                    )
+            )
+    })
+    @Operation(summary = "Update user data",
+            description = "Updates the details of a user based on the provided UserUpdateDataDTO.")
+    @PutMapping("/update-data")
+    public ResponseEntity<UserResponseDTO> updateUserData(
+            @RequestBody @Valid UserUpdateDataDTO dto
+    ) {
+        return ResponseEntity.ok(authService.updateUserData(dto));
+    }
+
+    /**
+     * Updates the user's password based on the provided {@link UserUpdatePasswordDTO}.
+     *
+     * @param dto the {@link UserUpdatePasswordDTO} containing the user's current data
+     * @return a {@link UserResponseDTO} containing the updated user's details
+     */
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Successfully updated user password"),
+            @ApiResponse(responseCode = "401",
+                    description = "User password does not match or new password is the same as the current password",
+                    content = @Content(
+                            mediaType = "application/json",
+                            schema = @Schema(implementation = ExceptionDTO.class)
+                    )
+            ),
+            @ApiResponse(responseCode = "404",
+                    description = "User not found",
+                    content = @Content(
+                            mediaType = "application/json",
+                            schema = @Schema(implementation = ExceptionDTO.class)
+                    )
+            ),
+            @ApiResponse(responseCode = "500",
+                    description = "Internal server error",
+                    content = @Content(
+                            mediaType = "application/json",
+                            schema = @Schema(implementation = InternalServerExceptionDTO.class)
+                    )
+            )
+    })
+    @Operation(summary = "Update user password",
+            description = "Updates the user's password based on the provided UserUpdatePasswordDTO and new password.")
+    @PutMapping("/update-password")
+    public ResponseEntity<UserResponseDTO> updatePassword(
+            @RequestBody @Valid UserUpdatePasswordDTO dto
+    ) {
+        return ResponseEntity.ok(authService.updatePassword(dto));
     }
 }

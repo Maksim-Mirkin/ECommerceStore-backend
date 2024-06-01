@@ -1,14 +1,17 @@
 package edu.mlm.ecommercestore.dto.user;
 
+import edu.mlm.ecommercestore.entity.Role;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.util.Set;
+
 /**
  * Data Transfer Object for conveying basic user information in responses.
- * Includes the user's unique identifier, username, and email address.
+ * Includes the user's unique identifier, username, user image and email address.
  */
 @Data
 @Builder
@@ -35,4 +38,16 @@ public class UserResponseDTO {
      */
     @Schema(description = "The email address of the user.", example = "user@example.com")
     private String email;
+
+    /**
+     * The image of the user.
+     */
+    @Schema(description = "The image of the user.", example = "https://example.com/image.jpg")
+    private String userImage;
+
+    /**
+     * The roles of the user.
+     */
+    @Schema(description = "The roles of the user.", example = "ROLE_USER")
+    private Set<Role> roles;
 }

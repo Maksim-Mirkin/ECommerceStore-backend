@@ -4,6 +4,8 @@ import edu.mlm.ecommercestore.dto.login.LoginRequestDTO;
 import edu.mlm.ecommercestore.dto.login.LoginResponseDTO;
 import edu.mlm.ecommercestore.dto.user.UserRequestDTO;
 import edu.mlm.ecommercestore.dto.user.UserResponseDTO;
+import edu.mlm.ecommercestore.dto.user.UserUpdateDataDTO;
+import edu.mlm.ecommercestore.dto.user.UserUpdatePasswordDTO;
 import edu.mlm.ecommercestore.entity.User;
 import edu.mlm.ecommercestore.error.AuthenticationException;
 import edu.mlm.ecommercestore.error.UserAlreadyExistsException;
@@ -42,14 +44,7 @@ public class AuthServiceImpl implements AuthService {
     private final ModelMapper modelMapper;
 
     /**
-     * Loads a user's details based on the username, throwing {@link UsernameNotFoundException} if the user does not exist.
-     * <p>
-     * This method is essential for Spring Security's authentication process, providing user details
-     * that include the username, password, and associated roles.
-     *
-     * @param username the username of the user to load
-     * @return a {@link UserDetails} instance representing the user's security details
-     * @throws UsernameNotFoundException if the user cannot be found
+     * {@inheritDoc}
      */
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
@@ -62,14 +57,7 @@ public class AuthServiceImpl implements AuthService {
     }
 
     /**
-     * Registers a new user with the provided user information, encoding the password and assigning default roles.
-     * <p>
-     * This method handles new user registration, including validation to ensure that the username and email
-     * are unique within the system. It also maps the registration data to a User entity, saves it, and
-     * returns a DTO with the user's information.
-     *
-     * @param dto the data transfer object containing the user registration information
-     * @return a {@link UserResponseDTO} with the registered user's details
+     * {@inheritDoc}
      */
     @Override
     public UserResponseDTO register(UserRequestDTO dto) {
@@ -88,14 +76,7 @@ public class AuthServiceImpl implements AuthService {
     }
 
     /**
-     * Authenticates a user based on the provided credentials, generating a JWT token for successful authentication.
-     * <p>
-     * This method verifies the user's credentials, throwing {@link AuthenticationException} if authentication fails.
-     * Upon successful authentication, it generates and returns a JWT token that the client can use for subsequent
-     * authenticated requests.
-     *
-     * @param dto the data transfer object containing the login credentials
-     * @return a {@link LoginResponseDTO} containing the JWT token for the authenticated session
+     * {@inheritDoc}
      */
     @Override
     public LoginResponseDTO login(LoginRequestDTO dto) {
@@ -116,6 +97,46 @@ public class AuthServiceImpl implements AuthService {
     }
 
     /**
+     * {@inheritDoc}
+     */
+    @Override
+    public UserResponseDTO getUserDetails(Authentication authentication) {
+        val user = getUserEntityOrThrow(authentication.getName());
+        return modelMapper.map(user, UserResponseDTO.class);
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public UserResponseDTO updateUserData(UserUpdateDataDTO dto) {
+        val user = getUserEntityOrThrow(dto.getOldUsername());
+        user.setUsername(dto.getNewUsername());
+        user.setEmail(dto.getEmail());
+        user.setUserImage(dto.getUserImage());
+        val saved = userRepository.save(user);
+        return modelMapper.map(saved, UserResponseDTO.class);
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public UserResponseDTO updatePassword(UserUpdatePasswordDTO dto) throws AuthenticationException {
+        val user = getUserEntityOrThrow(dto.getUsername());
+        if (!passwordEncoder.matches(dto.getOldPassword(), user.getPassword())) {
+            throw new AuthenticationException("Provide password does not match the current password.");
+        }
+        if (passwordEncoder.matches(dto.getNewPassword(), user.getPassword())) {
+            throw new AuthenticationException("New password cannot be the same as the current password.");
+        }
+        val encodedNewPassword = passwordEncoder.encode(dto.getNewPassword());
+        user.setPassword(encodedNewPassword);
+        val saved = userRepository.save(user);
+        return modelMapper.map(saved, UserResponseDTO.class);
+    }
+
+    /**
      * Retrieves a {@link User} entity by username, case-insensitively, throwing {@link UsernameNotFoundException}
      * if the user does not exist.
      * <p>
@@ -128,9 +149,6 @@ public class AuthServiceImpl implements AuthService {
      */
     private User getUserEntityOrThrow(String username) {
         return userRepository.findUserByUsernameIgnoreCase(username)
-                .orElseThrow(() -> {
-                    System.out.println("User not found");
-                    return new UsernameNotFoundException();
-                });
+                .orElseThrow(() -> new UsernameNotFoundException(String.format("Provided username '%s' is not exist", username)));
     }
 }

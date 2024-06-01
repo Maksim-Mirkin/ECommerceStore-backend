@@ -82,6 +82,16 @@ public class User {
     private String password;
 
     /**
+     * The image of the user.
+     */
+    @NotNull
+    @Schema(
+            description = "The image of the user",
+            example = "https://example.com/image.jpg"
+    )
+    private String userImage;
+
+    /**
      * The set of roles associated with the user. Roles determine the user's permissions and access within the system.
      * This relationship is implemented as a many-to-many association, reflecting the versatility of user roles.
      */

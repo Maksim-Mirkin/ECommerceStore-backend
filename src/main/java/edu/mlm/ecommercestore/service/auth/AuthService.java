@@ -4,8 +4,13 @@ import edu.mlm.ecommercestore.dto.login.LoginRequestDTO;
 import edu.mlm.ecommercestore.dto.login.LoginResponseDTO;
 import edu.mlm.ecommercestore.dto.user.UserRequestDTO;
 import edu.mlm.ecommercestore.dto.user.UserResponseDTO;
+import edu.mlm.ecommercestore.dto.user.UserUpdateDataDTO;
+import edu.mlm.ecommercestore.dto.user.UserUpdatePasswordDTO;
+import edu.mlm.ecommercestore.error.AuthenticationException;
+import org.springframework.security.core.Authentication;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
+
 
 /**
  * Service interface for authentication and user management operations.
@@ -53,4 +58,32 @@ public interface AuthService {
      * such as tokens or user information
      */
     LoginResponseDTO login(LoginRequestDTO dto);
+
+    /**
+     * Retrieves the details of a user based on the provided username.
+     *
+     * @param authentication The authentication context of the user performing the operation.
+     * @return a {@link UserResponseDTO} containing the user's details.
+     * @throws edu.mlm.ecommercestore.error.UsernameNotFoundException if the user with the specified username is not found.
+     */
+    UserResponseDTO getUserDetails(Authentication authentication);
+
+    /**
+     * Updates the user data based on the provided {@link UserUpdateDataDTO}.
+     *
+     * @param dto the {@link UserUpdateDataDTO} containing the user's new data
+     * @return a {@link UserResponseDTO} containing the updated user's details
+     * @throws edu.mlm.ecommercestore.error.UsernameNotFoundException if the user with the specified username is not found
+     */
+    UserResponseDTO updateUserData(UserUpdateDataDTO dto);
+
+    /**
+     * Updates the user's password based on the provided {@link UserUpdatePasswordDTO}.
+     *
+     * @param dto the {@link UserUpdatePasswordDTO} containing the user's current data
+     * @return a {@link UserResponseDTO} containing the updated user's details
+     * @throws AuthenticationException if the current password does not match or the new password is the same as the current password
+     * @throws edu.mlm.ecommercestore.error.UsernameNotFoundException if the user with the specified username is not found
+     */
+    UserResponseDTO updatePassword(UserUpdatePasswordDTO dto);
 }

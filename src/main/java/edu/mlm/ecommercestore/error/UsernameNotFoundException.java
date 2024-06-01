@@ -10,8 +10,8 @@ public class UsernameNotFoundException extends ECommerceException{
         super(message);
     }
 
-    public UsernameNotFoundException(){
-        super("Provided username is not exist");
-    }
+
+
+
 
 }
