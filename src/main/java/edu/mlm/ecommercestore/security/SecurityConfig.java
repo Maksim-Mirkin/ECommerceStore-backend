@@ -9,6 +9,7 @@ import edu.mlm.ecommercestore.config.RSAKeyProperties;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.http.HttpMethod;
 import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
@@ -100,6 +101,9 @@ public class SecurityConfig {
                         auth -> {
                             //allows login/register
                             auth.requestMatchers("/api/v1/auth/**").permitAll();
+
+                            // Allows get requests to the products endpoint
+                            auth.requestMatchers(HttpMethod.GET,"/api/v1/products/**").permitAll();
 
                             //secure the rest of the API
                             auth.requestMatchers("/api/v1/**").authenticated();

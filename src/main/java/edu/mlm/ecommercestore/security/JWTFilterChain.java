@@ -29,7 +29,7 @@ public class JWTFilterChain extends OncePerRequestFilter {
 
     /**
      * Filters each HTTP request to check for a valid JWT in the Authorization header, except for
-     * requests to paths starting with "/api/v1/auth" which are allowed to bypass this security check.
+     * requests to paths starting with "/api/v1/auth" and "/api/v1/products" which are allowed to bypass this security check.
      * If the token is valid, the filter chain continues to the next element. Invalid tokens or requests
      * without tokens result in a response with HTTP status 401 Unauthorized and a JSON error message.
      * <p>
@@ -47,6 +47,10 @@ public class JWTFilterChain extends OncePerRequestFilter {
     @SuppressWarnings("NullableProblems")
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
         if (request.getRequestURI().startsWith("/api/v1/auth")) {
+            filterChain.doFilter(request, response);
+            return;
+        }
+        if (request.getRequestURI().startsWith("/api/v1/products")) {
             filterChain.doFilter(request, response);
             return;
         }
