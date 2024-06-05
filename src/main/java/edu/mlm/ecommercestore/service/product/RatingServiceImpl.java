@@ -31,7 +31,7 @@ public class RatingServiceImpl implements RatingService {
     public RatingResponseDTO postRating(long productId, RatingRequestDTO dto, Authentication authentication) {
         val product = productService.getProductEntityOrThrow(productId);
         val user = getUserEntityOrThrow(authentication);
-        if(ratingRepository.findByProductAndUser(product,user).isPresent()){
+        if (ratingRepository.findByProductAndUser(product, user).isPresent()) {
             throw new MultipleRatingException();
         }
         var rating = modelMapper.map(dto, Rating.class);
@@ -60,6 +60,19 @@ public class RatingServiceImpl implements RatingService {
                 .build();
         val saved = ratingRepository.save(ratingBeforeSave);
         return modelMapper.map(saved, RatingResponseDTO.class);
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public RatingResponseDTO getRatingByProductId(long productId, Authentication authentication) {
+        val product = productService.getProductEntityOrThrow(productId);
+        val user = getUserEntityOrThrow(authentication);
+        val rating = ratingRepository.findByProductAndUser(product, user).orElseThrow(
+                ResourceNotFoundException.newInstance("Rating", "username", user.getUsername())
+        );
+        return modelMapper.map(rating, RatingResponseDTO.class);
     }
 
     /**

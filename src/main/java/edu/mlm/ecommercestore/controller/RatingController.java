@@ -132,4 +132,43 @@ public class RatingController {
     ) {
         return ResponseEntity.ok(ratingService.updateRating(productId, dto, authentication));
     }
+
+    /**
+     * Retrieves the rating for a specific product given by an authenticated user.
+     *
+     * @param productId      the ID of the product whose rating is to be retrieved.
+     * @param authentication the authentication object containing the current user's authentication details.
+     * @return a {@link ResponseEntity} containing the {@link RatingResponseDTO}.
+     */
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Rating retrieved successfully",
+                    content = @Content(
+                            mediaType = "application/json",
+                            schema = @Schema(implementation = RatingResponseDTO.class)
+                    )),
+            @ApiResponse(responseCode = "401", description = "You are not authorized",
+                    content = @Content(
+                            mediaType = "application/json",
+                            schema = @Schema(implementation = ExceptionDTO.class)
+                    )),
+            @ApiResponse(responseCode = "404", description = "Rating not found",
+                    content = @Content(
+                            mediaType = "application/json",
+                            schema = @Schema(implementation = ExceptionDTO.class)
+                    )),
+            @ApiResponse(responseCode = "500", description = "Internal server error",
+                    content = @Content(
+                            mediaType = "application/json",
+                            schema = @Schema(implementation = InternalServerExceptionDTO.class)
+                    ))
+    })
+    @Operation(summary = "Get a product rating",
+            description = "Retrieves the rating for a specific product given by an authenticated user.")
+    @GetMapping("/{productId}/ratings")
+    public ResponseEntity<RatingResponseDTO> getRatingByProductId(
+            @PathVariable long productId,
+            Authentication authentication
+    ) {
+        return ResponseEntity.ok(ratingService.getRatingByProductId(productId, authentication));
+    }
 }

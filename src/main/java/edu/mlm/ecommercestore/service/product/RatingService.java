@@ -2,6 +2,7 @@ package edu.mlm.ecommercestore.service.product;
 
 import edu.mlm.ecommercestore.dto.rating.RatingRequestDTO;
 import edu.mlm.ecommercestore.dto.rating.RatingResponseDTO;
+import edu.mlm.ecommercestore.error.ResourceNotFoundException;
 import org.springframework.security.core.Authentication;
 
 /**
@@ -21,8 +22,8 @@ public interface RatingService {
      * Validates the provided rating details and associates the rating with the specified product and the
      * authenticated user.
      *
-     * @param productId the ID of the product to rate
-     * @param dto the data transfer object containing the rating information
+     * @param productId      the ID of the product to rate
+     * @param dto            the data transfer object containing the rating information
      * @param authentication the authentication context of the user submitting the rating
      * @return a {@link RatingResponseDTO} containing the details of the newly posted rating
      */
@@ -34,10 +35,20 @@ public interface RatingService {
      * Allows a user to modify their previously submitted rating for a product. Ensures that only the user who
      * originally posted the rating can update it, maintaining the authenticity of user feedback.
      *
-     * @param productId the ID of the product whose rating is to be updated
-     * @param dto the data transfer object containing the updated rating information
+     * @param productId      the ID of the product whose rating is to be updated
+     * @param dto            the data transfer object containing the updated rating information
      * @param authentication the authentication context of the user updating the rating
      * @return a {@link RatingResponseDTO} reflecting the updated rating details
      */
     RatingResponseDTO updateRating(long productId, RatingRequestDTO dto, Authentication authentication);
+
+    /**
+     * Retrieves the rating for a specific product given by the authenticated user.
+     *
+     * @param productId      the ID of the product whose rating is to be retrieved.
+     * @param authentication the authentication object containing the current user's authentication details.
+     * @return a {@link RatingResponseDTO} object containing the rating details.
+     * @throws ResourceNotFoundException if the product or the user's rating for the product is not found.
+     */
+    RatingResponseDTO getRatingByProductId(long productId, Authentication authentication);
 }

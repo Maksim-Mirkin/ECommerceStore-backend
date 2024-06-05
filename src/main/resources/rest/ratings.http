@@ -24,3 +24,8 @@ Authorization: bearer {{customerJWT}}
 {
   "rating": 3
 }
+
+### GET rating by product id
+GET http://localhost:8080/api/v1/products/1/ratings
+Content-Type: application/json
+Authorization: bearer {{adminJWT}}
