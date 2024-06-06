@@ -177,12 +177,16 @@ public class ProductServiceImpl implements ProductService {
 
     /**
      * Converts a {@link Product} object to a {@link ProductResponseDTO}.
+     * If the product has no average rating, a random rating between 1 and 5 is generated.
      *
      * @param product the product to convert
      * @return a ProductResponseDTO that represents the given product
      */
     private ProductResponseDTO getProductResponseDTO(Product product) {
         product.calculateAverageRating();
+        if(product.getAverageRating() == 0){
+            product.setAverageRating(1 + (Math.random() * 4));
+        }
         val productResponseDTO = modelMapper.map(product, ProductResponseDTO.class);
         productResponseDTO.setCategory(product.getCategory().getName());
         return productResponseDTO;
