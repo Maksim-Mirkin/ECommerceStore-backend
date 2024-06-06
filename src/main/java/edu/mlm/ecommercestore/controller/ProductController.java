@@ -66,7 +66,9 @@ public class ProductController {
     @Operation(summary = "Get products",
             description = "Retrieves a list of products with pagination support. "
                     + "Supports filtering by name, brands, price range, colors, memory capacities, weights, "
-                    + "battery capacities, operating systems, and category names.")
+                    + "battery capacities, operating systems, and category names. " +
+                    "If averageRating is equal to 0, random rating is generated." +
+                    "Sorting by rating only works with not generated ratings.")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "Successfully retrieved list of products",
                     content = @Content(
