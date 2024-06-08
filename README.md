@@ -14,6 +14,16 @@ Designed for scalability, this server-side application can integrate seamlessly 
 
 ## Table of Contents
 
+- [Table of Contents](#table-of-contents)
+- [Design Patterns](#design-patterns)
+- [Technologies](#technologies)
+- [Project Structure](#project-structure)
+- [Dependencies](#dependencies)
+- [Setup](#setup)
+- [API Documentation](#api-documentation)
+- [See also](#see-also)
+- [License](#license)
+
 ## Design Patterns
 
 In E-Commerce backend project, various design patterns were implemented to enhance modularity, maintainability, and performance:
@@ -40,19 +50,19 @@ The Builder pattern is utilized to construct complex objects step by step. It is
 
 ## Technologies
 
-- Java 21
-- Spring Boot 3.2.2
-- Spring Data JPA
-- Spring Boot Starter Web
-- Spring Boot Starter Validation
-- Spring Boot Starter Security and OAuth2 Resource Server
-- Spring Boot Devtools
-- Spring Boot Configuration Processor
-- MySQL Connector-J
-- Lombok
-- ModelMapper
-- Springdoc OpenAPI UI
-- Auth0 MVC Commons
+- **Java 21**: Modern version of Java ensuring high performance and security.
+- **Spring Boot 3.2.2**: Provides a powerful suite of default configurations and utilities to simplify bootstrapping and developing new Spring applications.
+- **Spring Data JPA**: Streamlines database operations with robust ORM support.
+- **Spring Boot Starter Web**: Aids in creating web applications and RESTful services with Spring MVC.
+- **Spring Boot Starter Validation**: Adds automatic model validation using Java Bean Validation API.
+- **Spring Boot Starter Security and OAuth2 Resource Server**: Secures applications with standardized OAuth2 protocols.
+- **Spring Boot Devtools**: Enhances development efficiency with features like automatic restart and live reloading.
+- **Spring Boot Configuration Processor**: Manages application configurations dynamically.
+- **MySQL Connector-J**: Provides JDBC connection to MySQL databases.
+- **Lombok**: Simplifies code with automatic generation of getters, setters, constructors, and more.
+- **ModelMapper**: Facilitates object mapping to easily convert between model objects.
+- **Springdoc OpenAPI UI**: Automatically generates and serves interactive API documentation using Swagger UI.
+- **Auth0 MVC Commons**: Offers integration solutions for authentication and authorization using Auth0.
 
 ## Project Structure
 
@@ -89,16 +99,16 @@ This section outlines the key libraries and frameworks upon which the E-Commerce
 
 | Dependency                                     | Version | Description                                                                                                   |
 | ---------------------------------------------- | ------- | ------------------------------------------------------------------------------------------------------------- |
-| **Spring Boot Starter Data JPA**               |         | Facilitates database operations and ORM capabilities using JPA to simplify data access layers.                |
-| **Spring Boot Starter Validation**             |         | Provides support for validation using the Java Bean Validation API.                                           |
-| **Spring Boot Starter Web**                    |         | Enables building web applications and RESTful services using Spring MVC.                                      |
-| **Spring Boot Devtools**                       |         | Supports automatic application restarts and live reloading during development.                                |
+| **Spring Boot Starter Data JPA**               | 3.2.2   | Facilitates database operations and ORM capabilities using JPA to simplify data access layers.                |
+| **Spring Boot Starter Validation**             | 3.2.2   | Provides support for validation using the Java Bean Validation API.                                           |
+| **Spring Boot Starter Web**                    | 3.2.2   | Enables building web applications and RESTful services using Spring MVC.                                      |
+| **Spring Boot Devtools**                       | 3.2.2   | Supports automatic application restarts and live reloading during development.                                |
 | **MySQL Connector-J**                          |         | Connects the application to MySQL databases, ensuring JDBC support for database operations.                   |
 | **Spring Boot Configuration Processor**        |         | Enhances configuration management within Spring Boot applications.                                            |
 | **Lombok**                                     |         | Reduces boilerplate code with annotations for getters, setters, constructors, and more.                       |
 | **ModelMapper**                                | 3.2.0   | Simplifies object mapping, essential for transforming data between API DTOs and domain models.                |
-| **Spring Boot Starter Test**                   |         | Bundles essential testing tools like JUnit and Mockito for comprehensive unit and integration tests.          |
-| **Spring Boot Starter OAuth2 Resource Server** |         | Integrates OAuth2 for authentication, securing the application via tokens.                                    |
+| **Spring Boot Starter Test**                   | 3.2.2   | Bundles essential testing tools like JUnit and Mockito for comprehensive unit and integration tests.          |
+| **Spring Boot Starter OAuth2 Resource Server** | 3.2.2   | Integrates OAuth2 for authentication, securing the application via tokens.                                    |
 | **Springdoc OpenAPI Starter Webmvc UI**        | 2.3.0   | Automatically generates OpenAPI documentation for REST APIs, providing a Swagger UI.                          |
 | **MVC Auth Commons**                           | 1.2.0   | Offers tools for integrating Auth0, facilitating authentication and authorization in Spring MVC applications. |
 
@@ -110,7 +120,7 @@ Each component is selected to ensure robust, scalable, and secure operations, al
 
 All information about the API, including endpoints and schemas, is available here: http://localhost:8080/swagger-ui/index.html
 
-### See also
+## See also
 
 Check out my frontend project that interfaces with this application: [E-Commerce Store](https://github.com/Maksim-Mirkin/ECommerceStore-Frontend)
 
