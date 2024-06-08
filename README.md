@@ -26,32 +26,47 @@ Designed for scalability, this server-side application can integrate seamlessly 
 
 ## Design Patterns
 
-In E-Commerce backend project, various design patterns were implemented to enhance modularity, maintainability, and performance:
+In E-Commerce backend project, various design patterns were implemented to enhance modularity, maintainability, and
+performance:
 
 ### 3 Layer Architecture:
 
-The project adheres to the Model-View-Controller (MVC) architectural pattern, organizing the application into three layers: Repository, Service, and Controller. This segregation fosters a clear division of responsibilities, enhancing the modularity and maintainability of the codebase. Each layer is designed to handle specific aspects of the application: the Repository layer interacts with the database, the Service layer contains business logic, and the Controller layer manages the HTTP request and response.
+The project adheres to the Model-View-Controller (MVC) architectural pattern, organizing the application into three
+layers: Repository, Service, and Controller. This segregation fosters a clear division of responsibilities, enhancing
+the modularity and maintainability of the codebase. Each layer is designed to handle specific aspects of the
+application: the Repository layer interacts with the database, the Service layer contains business logic, and the
+Controller layer manages the HTTP request and response.
 
 ### Singleton
 
-The Singleton pattern ensures that a class has only one instance, and provides a global point of access to it. In this project, Singleton is utilized in managing configurations and pooled resources, such as database connections. This pattern is crucial in maintaining consistency across operations and managing resources efficiently.
+The Singleton pattern ensures that a class has only one instance, and provides a global point of access to it. In this
+project, Singleton is utilized in managing configurations and pooled resources, such as database connections. This
+pattern is crucial in maintaining consistency across operations and managing resources efficiently.
 
 ### Dependency Injection(DI):
 
-Dependency Injection is employed extensively within the framework to manage class dependencies. By injecting dependencies at runtime rather than at compile time, the application becomes more modular and easier to test. Spring's Inversion of Control (IoC) container facilitates this pattern, allowing components to be developed and tested in isolation.
+Dependency Injection is employed extensively within the framework to manage class dependencies. By injecting
+dependencies at runtime rather than at compile time, the application becomes more modular and easier to test. Spring's
+Inversion of Control (IoC) container facilitates this pattern, allowing components to be developed and tested in
+isolation.
 
 ### Data Transfer Objects(DTO):
 
-DTOs are used to encapsulate data and send it from the server to the client, reducing the number of method calls and simplifying the data exchanged. They help in tailoring data sent over the network to the client's needs, improving performance and security by segregating the raw database entities from the client-facing data models.
+DTOs are used to encapsulate data and send it from the server to the client, reducing the number of method calls and
+simplifying the data exchanged. They help in tailoring data sent over the network to the client's needs, improving
+performance and security by segregating the raw database entities from the client-facing data models.
 
 ### Builder:
 
-The Builder pattern is utilized to construct complex objects step by step. It is particularly useful in this project for creating product or order objects that may require various optional and required parameters. Using the Builder pattern simplifies object creation and enhances code readability and maintainability.
+The Builder pattern is utilized to construct complex objects step by step. It is particularly useful in this project for
+creating product or order objects that may require various optional and required parameters. Using the Builder pattern
+simplifies object creation and enhances code readability and maintainability.
 
 ## Technologies
 
 - **Java 21**: Modern version of Java ensuring high performance and security.
-- **Spring Boot 3.2.2**: Provides a powerful suite of default configurations and utilities to simplify bootstrapping and developing new Spring applications.
+- **Spring Boot 3.2.2**: Provides a powerful suite of default configurations and utilities to simplify bootstrapping and
+  developing new Spring applications.
 - **Spring Data JPA**: Streamlines database operations with robust ORM support.
 - **Spring Boot Starter Web**: Aids in creating web applications and RESTful services with Spring MVC.
 - **Spring Boot Starter Validation**: Adds automatic model validation using Java Bean Validation API.
@@ -67,7 +82,7 @@ The Builder pattern is utilized to construct complex objects step by step. It is
 ## Project Structure
 
 <details closed>
-    
+
     ├── src                                            # Source files
     │   ├── main
     │   │   ├── java
@@ -91,14 +106,16 @@ The Builder pattern is utilized to construct complex objects step by step. It is
     ├── pom.xml                                        # Tools and utilities
     ├── LICENSE
     └── README.md
+
 </details>
 
 ## Dependencies
 
-This section outlines the key libraries and frameworks upon which the E-Commerce Store application depends. Each dependency is crucial for the application's operation, enhancing its functionality and performance.
+This section outlines the key libraries and frameworks upon which the E-Commerce Store application depends. Each
+dependency is crucial for the application's operation, enhancing its functionality and performance.
 
 | Dependency                                     | Version | Description                                                                                                   |
-| ---------------------------------------------- | ------- | ------------------------------------------------------------------------------------------------------------- |
+|------------------------------------------------|---------|---------------------------------------------------------------------------------------------------------------|
 | **Spring Boot Starter Data JPA**               | 3.2.2   | Facilitates database operations and ORM capabilities using JPA to simplify data access layers.                |
 | **Spring Boot Starter Validation**             | 3.2.2   | Provides support for validation using the Java Bean Validation API.                                           |
 | **Spring Boot Starter Web**                    | 3.2.2   | Enables building web applications and RESTful services using Spring MVC.                                      |
@@ -112,17 +129,56 @@ This section outlines the key libraries and frameworks upon which the E-Commerce
 | **Springdoc OpenAPI Starter Webmvc UI**        | 2.3.0   | Automatically generates OpenAPI documentation for REST APIs, providing a Swagger UI.                          |
 | **MVC Auth Commons**                           | 1.2.0   | Offers tools for integrating Auth0, facilitating authentication and authorization in Spring MVC applications. |
 
-Each component is selected to ensure robust, scalable, and secure operations, aligned with modern software development best practices.
+Each component is selected to ensure robust, scalable, and secure operations, aligned with modern software development
+best practices.
 
 ## Setup
 
+Ensure that you have Java 21 and Maven installed on your machine.
+
+1. Open a terminal or command prompt.
+
+2. Navigate to the directory where you want to clone the repository:
+
+```bash
+cd path/to/your/directory
+```
+
+3. Clone the repository using the following command:
+
+```bash
+git clone https://github.com/Maksim-Mirkin/ECommerceStore-backend.git
+```
+
+4. Proceed to the project directory by entering:
+
+```bash
+cd ECommerceStore-backend
+```
+
+5. Build the project with:
+
+```bash
+mvn clean install
+```
+
+6. Run the project with:
+
+```bash
+mvn spring-boot:run
+```
+
+The application will be accessible at http://localhost:8080.
+
 ## API Documentation
 
-All information about the API, including endpoints and schemas, is available here: http://localhost:8080/swagger-ui/index.html
+All information about the API, including endpoints and schemas, is available
+here: http://localhost:8080/swagger-ui/index.html
 
 ## See also
 
-Check out my frontend project that interfaces with this application: [E-Commerce Store](https://github.com/Maksim-Mirkin/ECommerceStore-Frontend)
+Check out my frontend project that interfaces with this
+application: [E-Commerce Store](https://github.com/Maksim-Mirkin/ECommerceStore-Frontend)
 
 ## License
 
