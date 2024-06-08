@@ -7,6 +7,7 @@ import edu.mlm.ecommercestore.entity.Product;
 import edu.mlm.ecommercestore.error.AuthenticationException;
 import edu.mlm.ecommercestore.error.InvalidPropertyException;
 import edu.mlm.ecommercestore.error.PaginationException;
+import edu.mlm.ecommercestore.error.ProductDeletionException;
 import edu.mlm.ecommercestore.repository.CategoryRepository;
 import edu.mlm.ecommercestore.repository.ProductRepository;
 import edu.mlm.ecommercestore.repository.UserRepository;
@@ -129,12 +130,18 @@ public interface ProductService {
     /**
      * Deletes a product from the system.
      * <p>
-     * This method removes the product identified by the given ID from the database. It may perform
-     * authorization checks to ensure that the caller has the necessary permissions to delete the product.
+     * This method removes the product identified by the given ID from the database.
+     * It performs authorization checks to ensure that the caller has the necessary permissions
+     * to delete the product. If the product is associated with other entities such as order items,
+     * this method will throw a {@link ProductDeletionException}.
+     * </p>
      *
-     * @param id             The ID of the product to delete.
-     * @param authentication The authentication context of the user performing the operation.
+     * @param id The ID of the product to delete. This must be a valid identifier of an existing product.
+     * @param authentication The authentication context of the user performing the operation, used to
+     *                       verify whether the user has the appropriate permissions to perform the deletion.
      * @return A {@link ProductResponseDTO} containing the details of the deleted product.
+     * @throws ProductDeletionException if the product cannot be deleted due to existing references
+     *                                  from other database entities.
      */
     ProductResponseDTO deleteProduct(long id, Authentication authentication);
 }

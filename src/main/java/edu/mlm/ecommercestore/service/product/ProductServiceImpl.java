@@ -4,10 +4,7 @@ import edu.mlm.ecommercestore.dto.product.*;
 import edu.mlm.ecommercestore.entity.Category;
 import edu.mlm.ecommercestore.entity.Product;
 import edu.mlm.ecommercestore.entity.User;
-import edu.mlm.ecommercestore.error.AuthenticationException;
-import edu.mlm.ecommercestore.error.InvalidPropertyException;
-import edu.mlm.ecommercestore.error.PaginationException;
-import edu.mlm.ecommercestore.error.ResourceNotFoundException;
+import edu.mlm.ecommercestore.error.*;
 import edu.mlm.ecommercestore.repository.CategoryRepository;
 import edu.mlm.ecommercestore.repository.ProductRepository;
 import edu.mlm.ecommercestore.repository.UserRepository;
@@ -15,6 +12,7 @@ import edu.mlm.ecommercestore.service.filter.ProductSpecification;
 import lombok.RequiredArgsConstructor;
 import lombok.val;
 import org.modelmapper.ModelMapper;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
@@ -168,10 +166,14 @@ public class ProductServiceImpl implements ProductService {
      */
     @Override
     public ProductResponseDTO deleteProduct(long id, Authentication authentication) {
-        val product = getProductEntityOrThrow(id);
-        checkPermission(authentication);
-        productRepository.delete(product);
-        return getProductResponseDTO(product);
+        try{
+            val product = getProductEntityOrThrow(id);
+            checkPermission(authentication);
+            productRepository.delete(product);
+            return getProductResponseDTO(product);
+        } catch (DataIntegrityViolationException e) {
+            throw new ProductDeletionException("Product with id " + id + " cannot be deleted because it is associated with order");
+        }
     }
 
 
