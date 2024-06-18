@@ -15,6 +15,7 @@ Designed for scalability, this server-side application can integrate seamlessly 
 ## Table of Contents
 
 - [Table of Contents](#table-of-contents)
+- [Live Deployment](#live-deployment)
 - [Design Patterns](#design-patterns)
 - [Technologies](#technologies)
 - [Project Structure](#project-structure)
@@ -23,6 +24,18 @@ Designed for scalability, this server-side application can integrate seamlessly 
 - [API Documentation](#api-documentation)
 - [See also](#see-also)
 - [License](#license)
+
+## Live Deployment
+[Live Documentation](https://ecommerce-store-e805668c131b.herokuapp.com/swagger-ui/index.html)
+
+**Base URL:** https://ecommerce-store-e805668c131b.herokuapp.com
+
+**Hosting Providers:** Heroku
+
+#### Deployment Details
+
+1. **Database**: MySQL
+2. **Build Tools**: Maven
 
 ## Design Patterns
 
