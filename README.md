@@ -186,7 +186,7 @@ The application will be accessible at http://localhost:8080.
 ## API Documentation
 
 All information about the API, including endpoints and schemas, is available
-here: http://localhost:8080/swagger-ui/index.html
+here: [Link](https://ecommerce-store-e805668c131b.herokuapp.com/swagger-ui/index.html)
 
 ## See also
 
